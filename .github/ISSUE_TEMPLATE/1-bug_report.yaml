@@ -1,0 +1,47 @@
+name: 🐛 Bug report
+title: 'Bug: '
+description: Report unintentional or broken behaviour
+labels: 'type | bug' 
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thank you for submitting a bug report!
+
+      Please fill out the template below to make it easier to debug your problem.
+      
+- type: checkboxes
+  attributes:
+    label: Preflight Checklist
+    description: Please ensure you've completed all of the following.
+    options:
+      - label: I have searched for existing issues and cannot find mine, or existing issues do not fit my report.
+        required: true
+        
+- type: textarea
+  attributes:
+    label: Bug Behavior
+    description: A description of what happens when the bug occurs.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Expected Behavior
+    description: A description of what you expected to happen.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Steps To Reproduce
+    description: Steps to reproduce the behavior if it is not self-explanatory.
+    placeholder: |
+      1. With this setup '...'
+      2. Run '...'
+      3. Error caused '...'
+      
+- type: textarea
+  attributes:
+    label: Additional Information
+    description: Links? References? Anything that will give us more context about the issue that you are encountering!

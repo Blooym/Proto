@@ -1,0 +1,112 @@
+project_name: proto
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+    - go run ./build/generate.go {{.Version}}
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    ldflags:
+      - "-s -w"
+      - "-X 'BitsOfAByte/proto/shared.Version={{.Version}}'"
+      - "-X 'BitsOfAByte/proto/shared.Commit={{.Commit}}'"
+      - "-X 'BitsOfAByte/proto/shared.Date={{.Date}}'"
+
+archives:
+  - format: zip
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^build:"
+      - "^ci:"
+
+brews:
+  - tap:
+      owner: BitsOfAByte
+      name: proto
+
+    commit_author:
+      name: github-actions
+      email: actions@github.com
+
+    dependencies:
+      - name: gnu-tar
+
+    commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
+    description: |
+      Proto compatability tool manager
+    homepage: "https://github.com/BitsOfAByte/proto"
+    license: "GPL-3.0-only"
+    install: |
+      bin.install "proto"
+
+nfpms:
+  - vendor: BitsOfAByte
+    id: nfpm
+    homepage: https://github.com/BitsOfAByte/proto
+    maintainer: BitsOfAByte
+    description: |
+      Proto compatability tool manager
+    license: "GPL-3.0"
+    priority: extra
+    section: Utilities
+
+    formats:
+      - deb
+      - rpm
+
+    dependencies:
+      - tar
+
+    file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+    contents:
+      - dst: ~/.config/proto
+        type: dir
+        file_info:
+          mode: 0775
+      - dst: ~/.config/proto/config.json
+        type: ghost
+
+      - src: ./.build_data/dev.bitsofabyte.proto.desktop
+        dst: /usr/share/applications/dev.bitsofabyte.proto.desktop
+
+      - src: ./.build_data/dev.bitsofabyte.proto.metainfo.xml
+        dst: /usr/share/metainfo/dev.bitsofabyte.proto.metainfo.xml
+
+      - src: ./.build_data/icon.png
+        dst: /usr/share/icons/proto/icon.png
+
+publishers:
+  - name: "packages.bitsofabyte.dev"
+    dir: "{{ dir .ArtifactPath }}"
+    ids:
+      - nfpm
+    cmd: |
+      curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/BitsOfAByte/
+
+release:
+  github:
+    owner: BitsOfAByte
+    name: proto
+  prerelease: auto

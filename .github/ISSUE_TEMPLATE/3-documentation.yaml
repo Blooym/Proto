@@ -1,0 +1,26 @@
+name: 📃 Documention Change
+description: Report issues or request changes relating to documentation.
+title: 'Documentation: '
+labels: 'type | docs'
+body: 
+
+- type: markdown
+  attributes:
+    value: |
+      Thank you for submitting a documentation request!
+
+      Please fill out the template below to make it easier to work on your issue.
+      
+- type: checkboxes
+  attributes:
+    label: Preflight Checklist
+    description: Please ensure you've completed all of the following.
+    options:
+      - label: I have searched for existing issues and cannot find mine, or existing issues do not fit.
+        required: true
+
+- type: textarea
+  attributes:
+    label: Summary of issue
+  validations: 
+    required: true

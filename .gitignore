@@ -1,0 +1,9 @@
+
+# Builds
+dist/
+.build_data/
+
+# Secrets
+*.pem
+*.key
+*.env

@@ -1,0 +1,18 @@
+
+font name: TruenoUltLt
+font link: https://fontlibrary.org/en/font/trueno
+font author: Julieta Ulanovsky
+font author site: http://www.zkysky.com.ar/
+
+
+icon designer: Renan Ferreira Santos
+icon designer link: @renanfsdesign
+        
+{
+  "bg":"transparent",
+  "icon-gradient-0":"#2F8632",
+  "icon-gradient-1":"#BEFF7F",
+  "font":"#000000",
+  "slogan":"#141414"
+ }
+      
