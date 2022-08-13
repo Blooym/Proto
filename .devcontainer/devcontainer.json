@@ -1,0 +1,14 @@
+{
+    "dockerFile": "Dockerfile",
+    "updateRemoteUserUID": true,
+    "containerUser": "dev",
+    "remoteUser": "dev",
+    "postAttachCommand": "go mod tidy",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.go"
+            ]
+        }
+    }
+}

@@ -2,6 +2,7 @@
 # Builds
 dist/
 .build_data/
+proto
 
 # Secrets
 *.pem
