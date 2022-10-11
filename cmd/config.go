@@ -84,7 +84,7 @@ Please note that this does not mean that the file is safe to run if it passes, a
 	Run: func(cmd *cobra.Command, args []string) {
 		viper.Set("app.force", args[0])
 		viper.WriteConfig()
-		fmt.Println("Force checksum passing set to: " + args[0])
+		fmt.Println("Always force has been set to: " + args[0])
 	},
 }
 
