@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package shared
 
@@ -19,25 +20,55 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Correctly formats a path for the program.
+/*
+	GetCustomLocation returns the custom location of the passed arg is any of the pre-saved locations, otherwise it just returns the arg.
+	Arguments:
+		arg<string>: The argument to check.
+	Example:
+		dir := GetCustomLocation("steam")
+		fmt.Println(dir) // $HOME/.steam/root/compatabilitytools.d/
+	Returns:
+		string: A path.
+*/
+func GetCustomLocation(arg string) string {
+	customLocations := viper.GetStringMapString("app.customlocations")
+	for key, value := range customLocations {
+		if key == arg {
+			return value
+		}
+	}
+	return arg
+}
+
+/*
+	UsePath returns the path with sane changes to it.
+	Arguments:
+		path<string>: The path to adjust.
+		trailSlash<bool>: Whether or not to have a trailing slash.
+	Example:
+		dir := UsePath("$HOME/Dowloads/, false)
+		fmt.Println(dir) // $HOME/Downloads
+	Returns:
+		string: A path.
+*/
 func UsePath(path string, trailSlash bool) string {
 
 	Debug("UsePath: Attempting to format path: " + path)
 
-	// If trail slash is true, add a trailing slash to the path
-	if path[len(path)-1:] != "/" && trailSlash {
+	// If trail slash is true and there is no trailing slash add one
+	if trailSlash && !strings.HasSuffix(path, "/") {
 		path = path + "/"
 	}
 
-	// If trail slash is false, remove a trailing slash from the path
-	if path[len(path)-1:] == "/" && !trailSlash {
-		path = path[:len(path)-1]
+	// If trail slash is false and there is a trailing slash remove it
+	if !trailSlash && strings.HasSuffix(path, "/") {
+		path = strings.TrimSuffix(path, "/")
 	}
 
-	// If short notation for the home directory is used, expand it.
-	if path[:2] == "~/" {
+	// If short notation for the home directory is used, expand it to $HOME (~/ -> $HOME/)
+	if strings.HasPrefix(path, "~/") {
 		homeDir, _ := os.UserHomeDir()
-		path = filepath.Join(homeDir, path[2:])
+		path = strings.Replace(path, "~/", homeDir+"/", 1)
 	}
 
 	Debug("UsePath: Finished formatting path, result was: " + path)
@@ -45,23 +76,32 @@ func UsePath(path string, trailSlash bool) string {
 	return path
 }
 
-// CLears the configured temporary directory.
+/*
+	ClearTemp clears proto's temp directory
+	Returns:
+		error: An error if one occurs.
+*/
 func ClearTemp() error {
 	err := os.RemoveAll(UsePath(viper.GetString("storage.tmp"), false))
 	if err != nil {
 		return err
 	}
-
-	Debug("ClearTemp: Cleaned up temp directory")
-
+	Debug("ClearTemp: Cleaned up temp directory at " + viper.GetString("storage.tmp"))
 	return nil
 }
 
-// Downloads the file from the given URL, following redirects if needed. The final file will be put at the given path
-// and a progress bar will be output to the standard output while downloading.
+/*
+	DownloadFile downloads the file from the given URL, following redirects if needed. The final file will be put at the given path
+	Arguments:
+		path<string>: The path to download the file to.
+		url<string>: The URL to download the file from.
+	Example:
+		file, err := DownloadFile("$HOME/Downloads/file.tar.gz", "https://example.com/file.tar.gz")
+	Returns:
+		os.FileInfo: The file that was downloaded.
+		error: An error if one occurs.
+*/
 func DownloadFile(path, url string) (os.FileInfo, error) {
-
-	// If path doesnt exist create it
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
 		if err != nil {
@@ -112,7 +152,16 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 	return os.Stat(path)
 }
 
-// Attempts to exract the tar with gnu-tar.
+/*
+	ExtractTar extracts the given tar file to the given path using gnu-tar.
+	Arguments:
+		tarPath<string>: The path to the tar file.
+		extractPath<string>: The path to extract the tar file to.
+	Example:
+		err := ExtractTar("$HOME/Downloads/file.tar.gz", "$HOME/Downloads/")
+	Returns:
+		error: An error if one occurs.
+*/
 func ExtractTar(tarPath, extractPath string) error {
 
 	// If path doesnt exist create it
@@ -141,7 +190,18 @@ func ExtractTar(tarPath, extractPath string) error {
 	return nil
 }
 
-// Check a given files sum against the given sum (sha512sum).
+/*
+	Tries to match a given file's sha512sum against the given sum file
+	Arguments:
+		filePath<string>: The path to the file to check.
+		sumPath<string>: The path to the sum file.
+	Example:
+		match, err := CheckSum("$HOME/Downloads/file.tar.gz", "$HOME/Downloads/file.tar.gz.sha512sum")
+		fmt.Println(match) // true
+	Returns:
+		bool: Whether or not the file matches the sum.
+		error: An error if one occurs.
+*/
 func MatchChecksum(filePath, sumPath string) (bool, error) {
 	// Get the sum of the file with crypto inbuilt
 	h := crypto.SHA512.New()
@@ -173,8 +233,18 @@ func MatchChecksum(filePath, sumPath string) (bool, error) {
 	return false, nil
 }
 
-// Gets the size of the given directory in bytes.
-func DirSize(path string) (int64, error) {
+/*
+	GetDirSize gets the size of the given directory in bytes.
+	Arguments:
+		path<string>: The path to the directory.
+	Example:
+		size, err := GetDirSize("$HOME/Downloads/")
+		fmt.Println(size) // 4194304
+	Returns:
+		int64: The size of the directory in bytes.
+		error: An error if one occurs.
+*/
+func GetDirSize(path string) (int64, error) {
 	var size int64
 	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -188,8 +258,19 @@ func DirSize(path string) (int64, error) {
 	return size, err
 }
 
-// Converts the given bytes to a human readable amount of bytes and a unit.
-func HumanReadableSize(bytes int64) (int64, string) {
+/*
+	HumanReadableBytes converts the given bytes to a human readable amount of bytes and a unit.
+	Arguments:
+		bytes<int64>: The bytes to convert.
+	Example:
+		humanReadableBytes, unit := HumanReadableBytes(4194304)
+		fmt.Println(humanReadableBytes) // 4
+		fmt.Println(unit) // MB
+	Returns:
+		int64: The human readable amount of bytes.
+		string: The unit of the bytes.
+*/
+func HumanReadableBytes(bytes int64) (int64, string) {
 	switch {
 	case bytes < 1024:
 		return bytes, "B"

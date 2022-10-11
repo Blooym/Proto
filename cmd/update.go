@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package cmd
 
@@ -12,9 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// appUpdateCmd represents the update command
 var appUpdateCmd = &cobra.Command{
-	Use:   "update",
+	Use:   "app-update",
 	Short: "Update to the latest version of Proto",
 	Run: func(cmd *cobra.Command, args []string) {
 		forceFlag := cmd.Flag("force").Value.String()

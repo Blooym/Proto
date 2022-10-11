@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package shared
 
@@ -14,7 +15,18 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Format the the given index source into a valid format.
+/*
+	FormatRepo takes a source index and returns the owner and repo.
+	Arguments:
+		entryIndex<int>: The index of the source to get the owner and repo from.
+	Example:
+		owner, repo := FormatRepo(0)
+		fmt.Println(owner) // BitsOfAByte
+		fmt.Println(repo) // proto
+	Returns:
+		string: The owner of the repo.
+		string: The name of the repo.
+*/
 func FormatRepo(entryIndex int) (string, string) {
 
 	sources := viper.GetStringSlice("app.sources")
@@ -29,7 +41,14 @@ func FormatRepo(entryIndex int) (string, string) {
 	return split[0], split[1]
 }
 
-// Get the source index the user is trying to install from.
+/*
+	PromptSourceIndex asks the user which source they want to use if they do not manually specify one.
+	Example:
+		index := PromptSourceIndex()
+		fmt.Println(index) // 0
+	Returns:
+		int: The index of the source the user selected.
+*/
 func PromptSourceIndex() int {
 	var source int
 	sources := viper.GetStringSlice("app.sources")
@@ -67,7 +86,16 @@ func PromptSourceIndex() int {
 	return 0
 }
 
-// Get all of the releases from the proton source.
+/*
+	GetReleases returns all of the releases for the specified source index.
+	Arguments:
+		entryIndex<int>: The index of the source to get the owner and repo from.
+	Example:
+		releases, err := GetReleases(0)
+	Returns:
+		[]*github.RepositoryRelease: A list of all of the releases for the specified source index.
+		error: Any errors that occur.
+*/
 func GetReleases(entryIndex int) ([]*github.RepositoryRelease, error) {
 	owner, repo := FormatRepo(entryIndex)
 	client := github.NewClient(nil)
@@ -83,25 +111,41 @@ func GetReleases(entryIndex int) ([]*github.RepositoryRelease, error) {
 	return releases, nil
 }
 
-// Fetch all of the data for a specified tag from the proton source.
+/*
+	GetReleaseData returns the release data for the specified source index and tag.
+	Arguments:
+		entryIndex<int>: The index of the source to get the owner and repo from.
+		tag<string>: The tag of the release to get the data for.
+	Example:
+		release, err := GetReleaseData(0, "v1.0.0")
+	Returns:
+		*github.RepositoryRelease: The release data for the specified source index and tag.
+		error: Any errors that occur.
+*/
 func GetReleaseData(entryIndex int, tag string) (*github.RepositoryRelease, error) {
 	owner, repo := FormatRepo(entryIndex)
 	client := github.NewClient(nil)
-
 	release, _, err := client.Repositories.GetReleaseByTag(context.Background(), owner, repo, tag)
 
 	Debug("GetReleaseData: Looking for: " + owner + "/" + repo + "/" + tag)
-
 	if err != nil {
 		return nil, err
 	}
 
 	Debug("GetReleaseData: Found release " + release.GetTagName())
-
 	return release, nil
 }
 
-// Total Asset size in bytes.
+/*
+	GetTotalAssetSize returns the total size of all of the assets in the specified release.
+	Arguments:
+		assets<[]*github.ReleaseAsset>: The assets to get the total size of.
+	Example:
+		size := GetTotalAssetSize(release.Assets)
+		fmt.Println(size) // 123456789
+	Returns:
+		int64: The total size of all of the assets in the specified release.
+*/
 func GetTotalAssetSize(assets []*github.ReleaseAsset) int64 {
 	var size int
 
@@ -123,44 +167,53 @@ func GetTotalAssetSize(assets []*github.ReleaseAsset) int64 {
 	return int64(size)
 }
 
-// Sorts through a release to find valid assets for downloading a release.
+/*
+	GetValidAssets returns a tar file and a sha512sum file from the specified release.
+	Arguments:
+		release<*github.RepositoryRelease>: The release to get the assets from.
+	Example:
+		assets := GetValidAssets(release.Assets)
+		fmt.Println(assets) // [tar.xz, sha512sum]
+	Returns:
+		[]*github.ReleaseAsset: A list of the tar file and the sha512sum file.
+*/
 func GetValidAssets(release *github.RepositoryRelease) (*github.ReleaseAsset, *github.ReleaseAsset, error) {
-	var protonTar *github.ReleaseAsset
-	var protonSum *github.ReleaseAsset
+	var runnerTar *github.ReleaseAsset
+	var runnerSum *github.ReleaseAsset
 
 	for _, asset := range release.Assets {
 
 		Debug("GetValidAssets: Validating asset: " + asset.GetName())
 
 		// Once we have both assets, we don't need to keep looking.
-		if protonTar != nil && protonSum != nil {
+		if runnerTar != nil && runnerSum != nil {
 			Debug("GetValidAssets: Found both assets, finishing search.")
 			break
 		}
 
-		// Find the files needed for installing the proton.
+		// Find the files needed for installing the runner.
 		// Any tar file is supported, but it is recommended to use the .tar.xz format for better compression.
 		if strings.HasSuffix(asset.GetName(), ".tar.gz") {
 			Debug("GetValidAssets: Found a valid tar.gz asset.")
-			protonTar = asset
+			runnerTar = asset
 		} else if strings.HasSuffix(asset.GetName(), ".tar.xz") {
 			Debug("GetValidAssets: Found a valid tar.xz asset.")
-			protonTar = asset
+			runnerTar = asset
 		} else if strings.HasSuffix(asset.GetName(), ".sha512sum") {
 			Debug("GetValidAssets: Found a valid sha512sum asset.")
-			protonSum = asset
+			runnerSum = asset
 		}
 	}
 
 	// There was no tarball found for the release.
-	if protonTar == nil {
-		return nil, nil, fmt.Errorf("unable to find a proton tarball")
+	if runnerTar == nil {
+		return nil, nil, fmt.Errorf("unable to find a runner tarball")
 	}
 
 	// There was no valid checksum found for the release.
-	if protonSum == nil {
-		return protonTar, nil, nil
+	if runnerSum == nil {
+		return runnerTar, nil, nil
 	}
 
-	return protonTar, protonSum, nil
+	return runnerTar, runnerSum, nil
 }

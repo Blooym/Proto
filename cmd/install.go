@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package cmd
 
@@ -14,12 +15,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-// installCmd represents the install command
 var installCmd = &cobra.Command{
 	Use:   "install [tag]",
-	Short: "Download and install Proton to your system.",
-	Long: `Download and install Proton to your system.
-Run without arguments to install to the latest version or specify a tag to install.`,
+	Short: "Download and install runner to your system.",
 	PostRun: func(cmd *cobra.Command, args []string) {
 		shared.ClearTemp()
 	},
@@ -28,6 +26,14 @@ Run without arguments to install to the latest version or specify a tag to insta
 		// Prevent the program from having another long-running process
 		lock := shared.HandleLock()
 		defer lock.Unlock()
+
+		// Make sure an install directory is specified.
+		installDir := cmd.Flags().Lookup("dir").Value.String()
+		if installDir == "" {
+			fmt.Println("No operating directory specified, please use the --dir flag to specify either a full path or a custom keyword path (run 'proto config locations -h' for more info).")
+			os.Exit(1)
+		}
+		installDir = shared.UsePath(shared.GetCustomLocation(installDir), true)
 
 		/**
 		----------------------
@@ -56,18 +62,16 @@ Run without arguments to install to the latest version or specify a tag to insta
 		switch len(args) {
 		case 0: // Install latest tag.
 			data, err := shared.GetReleases(source)
-			shared.Check(err)
+			shared.CheckError(err)
 			tagData = data[0]
 		default: // Install a specific tag.
 			data, err := shared.GetReleaseData(source, args[0])
-			shared.Check(err)
+			shared.CheckError(err)
 			tagData = data
 		}
 
-		// Get the installation directory. and flag values for confirmation.
-		installDir := shared.UsePath(viper.GetString("storage.install"), true)
 		yesFlag := rootCmd.Flag("yes").Value.String()
-		s, m := shared.HumanReadableSize(shared.GetTotalAssetSize(tagData.Assets))
+		s, m := shared.HumanReadableBytes(shared.GetTotalAssetSize(tagData.Assets))
 
 		/**
 		----------------------
@@ -110,18 +114,18 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		// Fetch valid assets from the release.
 		tar, sum, err := shared.GetValidAssets(tagData)
-		shared.Check(err)
+		shared.CheckError(err)
 
 		// Handle the lack of a checksum depending on the user's preference.
 		if sum == nil {
 			forced := viper.GetBool("app.forcechecksum")
 
-			if forced {
-				fmt.Println("No checksum file found, aborting install.")
+			if !forced {
+				fmt.Println("No checksum file found, aborting install. (Use --force to ignore this error this time)")
 				os.Exit(1)
 			}
 
-			fmt.Println("No checksum file found, continuing without verification.")
+			fmt.Println("Warning: No checksum file found, continuing without verification (forced).")
 		}
 
 		// Download the assets to the temp directory.
@@ -129,7 +133,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		// Download the tarball.
 		_, err = shared.DownloadFile(tmp+tar.GetName(), tar.GetBrowserDownloadURL())
-		shared.Check(err)
+		shared.CheckError(err)
 
 		/**
 		----------------------
@@ -140,12 +144,12 @@ Run without arguments to install to the latest version or specify a tag to insta
 		// If it exists, download the checksum file and verify it against the downloaded tarball.
 		if sum != nil {
 			_, err = shared.DownloadFile(tmp+sum.GetName(), sum.GetBrowserDownloadURL())
-			shared.Check(err)
+			shared.CheckError(err)
 
 			match, err := shared.MatchChecksum(tmp+tar.GetName(), tmp+sum.GetName())
 			forceSum := viper.GetBool("app.forcechecksum")
 
-			shared.Check(err)
+			shared.CheckError(err)
 
 			// If the checksums don't match and force sum is enabled, abort.
 			if !match && viper.GetBool("app.forcechecksum") {
@@ -181,7 +185,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		fmt.Println("Extracting files...")
 
 		err = shared.ExtractTar(tmp+tar.GetName(), installDir)
-		shared.Check(err)
+		shared.CheckError(err)
 
 		/**
 		----------------------
@@ -197,11 +201,10 @@ func init() {
 	rootCmd.AddCommand(installCmd)
 
 	// Register the command flags.
-	installCmd.Flags().StringP("install-dir", "i", "", "Specify the install directory.")
-	installCmd.Flags().BoolP("force-sum", "f", true, "Force checksum verification")
+	installCmd.Flags().StringP("dir", "d", "", "The directory to operate in.")
+	installCmd.Flags().BoolP("force", "f", false, "Force installation (ignoring missing or failed checksums)")
 	installCmd.Flags().IntP("source", "s", 0, "Specify the source to install from.")
 
 	// Bind the flags to the viper config.
-	viper.BindPFlag("storage.install", installCmd.Flags().Lookup("install-dir"))
-	viper.BindPFlag("app.forcechecksum", installCmd.Flags().Lookup("force-sum"))
+	viper.BindPFlag("app.forcechecksum", installCmd.Flags().Lookup("force"))
 }

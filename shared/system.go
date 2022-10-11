@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package shared
 
@@ -12,22 +13,19 @@ import (
 	"github.com/gofrs/flock"
 )
 
-// Restricts running the binary as a root user. (Identified by UID == 0)
-func IsRoot() bool {
-	return os.Geteuid() == 0
-}
-
-// Detects if the binary is a preview version. (Identified by Version string)
-func IsPreview() bool {
-	return Version == "0.0.1-next" && os.Getenv("PROTO_CONSENT") != "true"
-}
-
-// Handles the locking and unlocking of the program lock file.
+/*
+	HandleLock is a function that handles the file lock for Proto preventing multiple instances of the app from running at once.
+	Example:
+		lock := HandleLock()
+		defer lock.Unlock()
+	Returns:
+		flock.Flock: The file lock
+*/
 func HandleLock() *flock.Flock {
 	// Get the file lock.
 	fileLock := flock.New("/tmp/proto.lock")
 	locked, err := fileLock.TryLock()
-	Check(err)
+	CheckError(err)
 
 	// The lock has been acquired, safe to proceed.
 	if locked {
@@ -44,7 +42,14 @@ func HandleLock() *flock.Flock {
 	return nil
 }
 
-// Prompt a user to confirm the given input with a yes/no prompt.
+/*
+	Prompt is a function that prompts the user for a yes or no answer with a given message.
+	Arguments:
+		message<string> The message to display to the user.
+		defaultValue<bool> The default value to return if the user hits enter
+	Returns:
+		bool: The user's answer
+*/
 func Prompt(message string, defaultValue bool) bool {
 	var response string
 
