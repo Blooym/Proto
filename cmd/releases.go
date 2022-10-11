@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package cmd
 
@@ -14,10 +15,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-// releasesCmd represents the releases command
 var releasesCmd = &cobra.Command{
 	Use:     "releases",
-	Short:   "Show all available releases from the proton source.",
+	Short:   "Show all available releases from the runner source.",
 	Example: `proto releases --limit 5`,
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -39,11 +39,11 @@ var releasesCmd = &cobra.Command{
 
 		// Get the releases from the backend.
 		releases, err := shared.GetReleases(source)
-		shared.Check(err)
+		shared.CheckError(err)
 
 		// Create a table to display the releases.
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Tag", "Released On", "More Info"})
+		table.SetHeader([]string{"Tag", "Released On", "Info Command"})
 		limit, _ := cmd.Flags().GetInt("limit")
 
 		// Loop through the releases and add them to the table up to the limit.

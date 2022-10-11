@@ -6,7 +6,6 @@ on:
   pull_request:
 
 jobs:
-  # Label the pull request with its file changes
   Label:
     runs-on: ubuntu-latest
     steps:

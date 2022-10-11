@@ -3,7 +3,7 @@
 
 <img src="./.assets/Banners/banner.png" alt="Proto Logo">
   
-Install and manage custom Proton installations with ease on supported systems.
+Install and manage custom runners with ease on supported systems.
 
 **[View Issues](https://github.com/BitsOfAByte/proto/issues) · [Install](#installation) · [Contributing](https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md)**
   
@@ -19,7 +19,7 @@ Install and manage custom Proton installations with ease on supported systems.
 <!-- Repository Header End -->
 
 ## About
-Proto is a tool designed to make downloading and managing custom WINE/Proton installations as convinent and easy as possible. It provides support for multiple sources, custom installation directories, in-tool release data and more. 
+Proto is a tool designed to make downloading and managing custom runner installations as convinent and easy as possible. It provides support for multiple sources, custom installation directories, in-tool release data and more. 
 
 ## How to Use
 First off, you'll need to download Proto to your system using one of the supported [installation methods](#installation). Once you have it installed, the entire app is documented in the command line by running the `--help` flag after any command, which will provide details on how to use it. 

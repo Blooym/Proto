@@ -44,21 +44,16 @@ brews:
   - tap:
       owner: BitsOfAByte
       name: proto
-
     commit_author:
       name: github-actions
       email: actions@github.com
-
     dependencies:
       - name: gnu-tar
-
     commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
     description: |
       Proto compatability tool manager
     homepage: "https://github.com/BitsOfAByte/proto"
     license: "GPL-3.0-only"
-    install: |
-      bin.install "proto"
 
 nfpms:
   - vendor: BitsOfAByte
@@ -70,32 +65,24 @@ nfpms:
     license: "GPL-3.0"
     priority: extra
     section: Utilities
-
     formats:
       - deb
       - rpm
-
     dependencies:
       - tar
-
-    file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-
+    provides:
+      - proto
     contents:
-      - dst: ~/.config/proto
-        type: dir
-        file_info:
-          mode: 0775
-      - dst: ~/.config/proto/config.json
-        type: ghost
-
       - src: ./.build_data/dev.bitsofabyte.proto.desktop
         dst: /usr/share/applications/dev.bitsofabyte.proto.desktop
-
       - src: ./.build_data/dev.bitsofabyte.proto.metainfo.xml
         dst: /usr/share/metainfo/dev.bitsofabyte.proto.metainfo.xml
-
       - src: ./.build_data/icon.png
         dst: /usr/share/icons/proto/icon.png
+    scripts:
+      postremove: build/scripts/post-remove.sh
+    rpm:
+      compression: xz
 
 publishers:
   - name: "packages.bitsofabyte.dev"

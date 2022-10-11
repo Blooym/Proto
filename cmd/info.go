@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package cmd
 
@@ -13,7 +14,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-// infoCmd represents the info command
 var infoCmd = &cobra.Command{
 	Use:   "info <tag>",
 	Short: "Shows information about the given release.",
@@ -48,7 +48,7 @@ var infoCmd = &cobra.Command{
 		fmt.Println("Release:", data.GetTagName())
 		fmt.Println("Published:", data.GetPublishedAt().Format("2006-01-02 15:04:05"))
 		fmt.Println("Description:", data.GetBody())
-		fmt.Println("Install Command: proto install", data.GetTagName(), "-s", source+1)
+		fmt.Println("Install Command: proto install", data.GetTagName(), "-s", source+1, "-d", "<install-dir>")
 	},
 }
 

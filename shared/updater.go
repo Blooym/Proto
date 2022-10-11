@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package shared
 
@@ -12,13 +13,20 @@ import (
 	"github.com/creativeprojects/go-selfupdate"
 )
 
-// Causes the app to search for and install the latest version of Proto.
+/*
+	AppUpdate is a function that checks for updates and updates the application if an update is available.
+	Typically used for non package-manager installations
+	Arguments:
+		version<string> The current version of the application
+	Example:
+		AppUpdate("v1.2.3")
+*/
 func AppUpdate(version string) {
 	updater, _ := selfupdate.NewUpdater(selfupdate.Config{Validator: &selfupdate.ChecksumValidator{UniqueFilename: "checksums.txt"}})
 	latest, found, err := updater.DetectLatest("BitsOfAByte/proto")
 
 	// Unknown error occurred, abort update process.
-	Check(err)
+	CheckError(err)
 
 	// Specified OS or Architechture is not supported.
 	if !found {

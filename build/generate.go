@@ -1,6 +1,7 @@
 /*
 Copyright © 2022 BitsOfAByte
 
+GPLv3 License, see the LICENSE file for more information.
 */
 package main
 
@@ -33,12 +34,12 @@ func createBuildDir(dir string) {
 // Create a file in the build directory
 func createBuildFile(fileName string, data string) {
 	file, err := os.Create(build_dir + fileName)
-	shared.Check(err)
+	shared.CheckError(err)
 
 	defer file.Close()
 
 	_, err = file.WriteString(data)
-	shared.Check(err)
+	shared.CheckError(err)
 
 	file.Sync()
 }
@@ -63,13 +64,10 @@ Exec=proto gui
 Terminal=true
 Actions=NewShortcut;
 Categories=ConsoleOnly;Utility;X-GNOME-Utilities;FileTools;
-Keywords=proton;steamplay;
+Keywords=proton;steamplay;wine;
 StartupNotify=true
 NoDisplay=true
-
-[Desktop Action NewShortcut]
-Name=Install Latest Proton
-Exec=proto install`, version)
+`, version)
 
 	createBuildFile("dev.bitsofabyte.proto.desktop", fileData)
 }
@@ -87,10 +85,10 @@ func generateMetainfo() {
   <launchable type="desktop-id">dev.bitsofabyte.proto.desktop</launchable>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-only</project_license>
-  <summary>Manage custom Proton installations</summary>
+  <summary>Manage custom runner installations</summary>
   <description>
     <p>
-      Install and manage custom Proton installations easily and quickly using a clean user interface (coming soon), or even the command line.
+      Install and manage custom runners easily and quickly using a clean user interface (coming soon), or even the command line.
     </p>
   </description>
 
@@ -131,18 +129,18 @@ func generateMetainfo() {
 // Fetch the icon from the assets and put it in the build directory
 func generateIcon() {
 	srcFile, err := os.Open("./.assets/Logos/icon.png")
-	shared.Check(err)
+	shared.CheckError(err)
 	defer srcFile.Close()
 
 	destFile, err := os.Create(build_dir + "icon.png")
-	shared.Check(err)
+	shared.CheckError(err)
 	defer destFile.Close()
 
 	_, err = io.Copy(destFile, srcFile)
-	shared.Check(err)
+	shared.CheckError(err)
 
 	err = destFile.Sync()
-	shared.Check(err)
+	shared.CheckError(err)
 }
 
 // Cleanup the build directory
