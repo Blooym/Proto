@@ -80,7 +80,7 @@ nfpms:
       - src: ./.build_data/icon.png
         dst: /usr/share/icons/proto/icon.png
     scripts:
-      postremove: build/scripts/post-remove.sh
+      postremove: scripts/post-remove.sh
     rpm:
       compression: xz
 
