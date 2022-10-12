@@ -6,7 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"fmt"
 	"os"
 
@@ -33,11 +33,11 @@ var infoCmd = &cobra.Command{
 
 			source = sourceFlag - 1
 		} else {
-			source = shared.PromptSourceIndex()
+			source = core.PromptSourceIndex()
 		}
 
 		// Fetch the release data.
-		data, err := shared.GetReleaseData(source, args[0])
+		data, err := core.GetReleaseData(source, args[0])
 
 		if err != nil {
 			fmt.Println("That release does not exist on the given source.")

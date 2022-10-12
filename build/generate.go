@@ -6,8 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package main
 
 import (
-	"BitsOfAByte/proto/shared"
-	"fmt"
+	"BitsOfAByte/proto/core"
 	"io"
 	"os"
 )
@@ -19,6 +18,9 @@ func main() {
 	cleanup()
 	createBuildDir(build_dir)
 
+	generateAPTRepoFile()
+	generateDNFRepoFile()
+	generateRootAllowed()
 	generateDesktop()
 	generateMetainfo()
 	generateIcon()
@@ -34,12 +36,12 @@ func createBuildDir(dir string) {
 // Create a file in the build directory
 func createBuildFile(fileName string, data string) {
 	file, err := os.Create(build_dir + fileName)
-	shared.CheckError(err)
+	core.CheckError(err)
 
 	defer file.Close()
 
 	_, err = file.WriteString(data)
-	shared.CheckError(err)
+	core.CheckError(err)
 
 	file.Sync()
 }
@@ -53,23 +55,32 @@ func generateDesktop() {
 		panic("No version specified")
 	}
 
-	fileData := fmt.Sprintf(`[Desktop Entry]
-Version=%s
+	fileData := `[Desktop Entry]
 Type=Application
 Name=Proto
-GenericName=Proto
-Comment=Proto compatability tool manager
+Comment=Proto compatability & runner manager
 Icon=/usr/share/icons/proto/icon.png
-Exec=proto gui
-Terminal=true
-Actions=NewShortcut;
+Exec=proto
 Categories=ConsoleOnly;Utility;X-GNOME-Utilities;FileTools;
-Keywords=proton;steamplay;wine;
-StartupNotify=true
+Keywords=proton;steamplay;wine;runner;
 NoDisplay=true
-`, version)
+`
 
 	createBuildFile("dev.bitsofabyte.proto.desktop", fileData)
+}
+
+func generateDNFRepoFile() {
+	fileData := `[BitsOfAByte]            
+name=BitsOfAByte Packages         
+baseurl=https://packages.bitsofabyte.dev/yum/
+enabled=1
+gpgcheck=0`
+	createBuildFile("bitsofabyte.repo", fileData)
+}
+
+func generateAPTRepoFile() {
+	fileData := `deb [trusted=yes] https://packages.bitsofabyte.dev/apt/ /`
+	createBuildFile("bitsofabyte.list", fileData)
 }
 
 // Generate the .metainfo.xml file
@@ -81,20 +92,15 @@ func generateMetainfo() {
   <name>Proto</name>
   <developer_name>BitsOfAByte</developer_name>
   <content_rating type="oars-1.1" />
-  <icon type="local" width="128" height="128">/usr/share/icons/proto/icon.png</icon>
   <launchable type="desktop-id">dev.bitsofabyte.proto.desktop</launchable>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <summary>Manage custom runner installations</summary>
   <description>
     <p>
-      Install and manage custom runners easily and quickly using a clean user interface (coming soon), or even the command line.
+      Install and manage custom runners with ease in the command-line. Proto is a tool for managing custom wine runners for multiple programs without the need to manually download and extract them.
     </p>
   </description>
-
-  <categories>
-	<category>utility</category>
-  </categories>
 
   <provides>
     <binary>proto</binary>
@@ -114,33 +120,36 @@ func generateMetainfo() {
 	<control>console</control>
   </recommends>
 
-  <url type="homepage">http://github.com/BitsOfAByte/proto</url>
+  <url type="homepage">https://github.com/BitsOfAByte/proto</url>
   <url type="bugtracker">https://github.com/BitsOfAByte/proto/issues</url>
   <url type="faq">https://github.com/BitsOfAByte/proto#readme</url>
   <url type="help">https://github.com/BitsOfAByte/proto#readme</url>
-  <url type="contact">https://github.com/BitsOfAByte/proto/discussions</url>
-  <url type="vcs-browser">https://github.com/BitsOfAByte/proto</url>
-  <url type="contribute">https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md</url>
 </component>`
 
 	createBuildFile("dev.bitsofabyte.proto.metainfo.xml", fileData)
 }
 
+// Generate a root allowed file, preventing using root is false.
+func generateRootAllowed() {
+	fileData := `false`
+	createBuildFile("rootallowed", fileData)
+}
+
 // Fetch the icon from the assets and put it in the build directory
 func generateIcon() {
 	srcFile, err := os.Open("./.assets/Logos/icon.png")
-	shared.CheckError(err)
+	core.CheckError(err)
 	defer srcFile.Close()
 
 	destFile, err := os.Create(build_dir + "icon.png")
-	shared.CheckError(err)
+	core.CheckError(err)
 	defer destFile.Close()
 
 	_, err = io.Copy(destFile, srcFile)
-	shared.CheckError(err)
+	core.CheckError(err)
 
 	err = destFile.Sync()
-	shared.CheckError(err)
+	core.CheckError(err)
 }
 
 // Cleanup the build directory

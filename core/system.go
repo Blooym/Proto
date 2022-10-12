@@ -3,7 +3,7 @@ Copyright © 2022 BitsOfAByte
 
 GPLv3 License, see the LICENSE file for more information.
 */
-package shared
+package core
 
 import (
 	"fmt"
@@ -22,8 +22,12 @@ import (
 		flock.Flock: The file lock
 */
 func HandleLock() *flock.Flock {
-	// Get the file lock.
-	fileLock := flock.New("/tmp/proto.lock")
+	// Create a cache directory if it doesn't exist
+	cacheDir, _ := os.UserCacheDir()
+	os.MkdirAll(cacheDir+"/proto", 0755)
+
+	// Create a lock file
+	fileLock := flock.New(cacheDir + "/proto/lockfile")
 	locked, err := fileLock.TryLock()
 	CheckError(err)
 

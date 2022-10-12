@@ -6,9 +6,10 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/google/go-github/v44/github"
 	cobra "github.com/spf13/cobra"
@@ -18,13 +19,16 @@ import (
 var installCmd = &cobra.Command{
 	Use:   "install [tag]",
 	Short: "Download and install runner to your system.",
+	PreRun: func(cmd *cobra.Command, args []string) {
+		core.DeleteUserTemp()
+	},
 	PostRun: func(cmd *cobra.Command, args []string) {
-		shared.ClearTemp()
+		core.DeleteUserTemp()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Prevent the program from having another long-running process
-		lock := shared.HandleLock()
+		lock := core.HandleLock()
 		defer lock.Unlock()
 
 		// Make sure an install directory is specified.
@@ -33,7 +37,7 @@ var installCmd = &cobra.Command{
 			fmt.Println("No operating directory specified, please use the --dir flag to specify either a full path or a custom keyword path (run 'proto config locations -h' for more info).")
 			os.Exit(1)
 		}
-		installDir = shared.UsePath(shared.GetCustomLocation(installDir), true)
+		installDir = core.UsePath(core.GetCustomLocation(installDir), true)
 
 		/**
 		----------------------
@@ -54,24 +58,36 @@ var installCmd = &cobra.Command{
 
 			source = sourceFlag - 1
 		} else {
-			source = shared.PromptSourceIndex()
+			source = core.PromptSourceIndex()
 		}
 
 		// Find the version to install, if none is specified, use the latest.
 		var tagData *github.RepositoryRelease
 		switch len(args) {
 		case 0: // Install latest tag.
-			data, err := shared.GetReleases(source)
-			shared.CheckError(err)
+			data, err := core.GetReleases(source)
+			if err != nil {
+				if strings.ContainsAny(err.Error(), "Temporary failure in name resolution") {
+					fmt.Println("You are not connected to the internet. Please connect to the internet and try again.")
+					os.Exit(1)
+				}
+				panic(err)
+			}
 			tagData = data[0]
 		default: // Install a specific tag.
-			data, err := shared.GetReleaseData(source, args[0])
-			shared.CheckError(err)
+			data, err := core.GetReleaseData(source, args[0])
+			if err != nil {
+				if strings.ContainsAny(err.Error(), "Temporary failure in name resolution") {
+					fmt.Println("You are not connected to the internet. Please connect to the internet and try again.")
+					os.Exit(1)
+				}
+				panic(err)
+			}
 			tagData = data
 		}
 
 		yesFlag := rootCmd.Flag("yes").Value.String()
-		s, m := shared.HumanReadableBytes(shared.GetTotalAssetSize(tagData.Assets))
+		s, m := core.HumanReadableBytes(core.GetTotalAssetSize(tagData.Assets))
 
 		/**
 		----------------------
@@ -83,7 +99,7 @@ var installCmd = &cobra.Command{
 		if folderInfo, err := os.Stat(installDir + tagData.GetTagName()); err == nil && folderInfo.IsDir() {
 			// Prompt the user for to overwrite the existing version, skipped if -y flag is set.
 			if yesFlag != "true" {
-				resp := shared.Prompt(fmt.Sprintf("Looks like %s is already installed, overwrite? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
+				resp := core.Prompt(fmt.Sprintf("Looks like %s is already installed, overwrite? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
 				if !resp {
 					os.Exit(0)
@@ -99,7 +115,7 @@ var installCmd = &cobra.Command{
 			fmt.Println("Removed old installation: " + tagData.GetTagName())
 		} else if yesFlag != "true" {
 			// Prompt the user to confirm the install, skipped if -y flag is set.
-			resp := shared.Prompt(fmt.Sprintf("Are you sure you want to install %s? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
+			resp := core.Prompt(fmt.Sprintf("Are you sure you want to install %s? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
 			if !resp {
 				os.Exit(0)
@@ -113,12 +129,12 @@ var installCmd = &cobra.Command{
 		**/
 
 		// Fetch valid assets from the release.
-		tar, sum, err := shared.GetValidAssets(tagData)
-		shared.CheckError(err)
+		tar, sum, err := core.GetValidAssets(tagData)
+		core.CheckError(err)
 
 		// Handle the lack of a checksum depending on the user's preference.
 		if sum == nil {
-			forced := viper.GetBool("app.forcechecksum")
+			forced := viper.GetBool("app.force")
 
 			if !forced {
 				fmt.Println("No checksum file found, aborting install. (Use --force to ignore this error this time)")
@@ -129,11 +145,12 @@ var installCmd = &cobra.Command{
 		}
 
 		// Download the assets to the temp directory.
-		tmp := shared.UsePath(viper.GetString("storage.tmp"), true)
+		tmp, err := core.GetUserTemp()
+		core.CheckError(err)
 
 		// Download the tarball.
-		_, err = shared.DownloadFile(tmp+tar.GetName(), tar.GetBrowserDownloadURL())
-		shared.CheckError(err)
+		_, err = core.DownloadFile(tmp+tar.GetName(), tar.GetBrowserDownloadURL())
+		core.CheckError(err)
 
 		/**
 		----------------------
@@ -143,23 +160,23 @@ var installCmd = &cobra.Command{
 
 		// If it exists, download the checksum file and verify it against the downloaded tarball.
 		if sum != nil {
-			_, err = shared.DownloadFile(tmp+sum.GetName(), sum.GetBrowserDownloadURL())
-			shared.CheckError(err)
+			_, err = core.DownloadFile(tmp+sum.GetName(), sum.GetBrowserDownloadURL())
+			core.CheckError(err)
 
-			match, err := shared.MatchChecksum(tmp+tar.GetName(), tmp+sum.GetName())
-			forceSum := viper.GetBool("app.forcechecksum")
+			match, err := core.MatchChecksum(tmp+tar.GetName(), tmp+sum.GetName())
+			forceSum := viper.GetBool("app.force")
 
-			shared.CheckError(err)
+			core.CheckError(err)
 
 			// If the checksums don't match and force sum is enabled, abort.
-			if !match && viper.GetBool("app.forcechecksum") {
+			if !match && viper.GetBool("app.force") {
 				fmt.Println("Checksums do not match, aborting install.")
 				os.Exit(1)
 			}
 
 			// If the checksums don't match and force sum is disabled, prompt the user to continue unless -y flag is set.
 			if !match && !forceSum && yesFlag != "true" {
-				resp := shared.Prompt(fmt.Sprintf("Checksums do not match, continue? [Est. %v%s] (y/N) ", s, m), false)
+				resp := core.Prompt(fmt.Sprintf("Checksums do not match, continue? [Est. %v%s] (y/N) ", s, m), false)
 
 				if !resp {
 					os.Exit(0)
@@ -184,8 +201,8 @@ var installCmd = &cobra.Command{
 
 		fmt.Println("Extracting files...")
 
-		err = shared.ExtractTar(tmp+tar.GetName(), installDir)
-		shared.CheckError(err)
+		err = core.ExtractTar(tmp+tar.GetName(), installDir)
+		core.CheckError(err)
 
 		/**
 		----------------------
@@ -206,5 +223,5 @@ func init() {
 	installCmd.Flags().IntP("source", "s", 0, "Specify the source to install from.")
 
 	// Bind the flags to the viper config.
-	viper.BindPFlag("app.forcechecksum", installCmd.Flags().Lookup("force"))
+	viper.BindPFlag("app.force", installCmd.Flags().Lookup("force"))
 }

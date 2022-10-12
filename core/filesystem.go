@@ -3,7 +3,7 @@ Copyright © 2022 BitsOfAByte
 
 GPLv3 License, see the LICENSE file for more information.
 */
-package shared
+package core
 
 import (
 	"crypto"
@@ -77,17 +77,44 @@ func UsePath(path string, trailSlash bool) string {
 }
 
 /*
-	ClearTemp clears proto's temp directory
+	DeleteUserTemp clears the user's temp directory
 	Returns:
 		error: An error if one occurs.
 */
-func ClearTemp() error {
-	err := os.RemoveAll(UsePath(viper.GetString("storage.tmp"), false))
+func DeleteUserTemp() error {
+	tempDir := os.TempDir() + "/proto/" + fmt.Sprint(os.Getuid())
+	err := os.RemoveAll(UsePath(tempDir, true))
 	if err != nil {
 		return err
 	}
-	Debug("ClearTemp: Cleaned up temp directory at " + viper.GetString("storage.tmp"))
+	Debug("DeleteDir: Deleted directory at: " + tempDir)
 	return nil
+}
+
+/*
+	GetUserTemp creates a temporary directory in the proto temp directory
+	Example:
+		dir, err := GetUserTemp()
+		fmt.Println(dir) // /tmp/proto/1000/
+	Returns:
+		string: The path to the temp directory.
+		error: An error if one occurs.
+*/
+func GetUserTemp() (string, error) {
+	userTempDir := viper.GetString("storage.tmp") + "proto/"
+	err := os.MkdirAll(userTempDir, os.ModePerm)
+	os.Chmod(userTempDir, 0777)
+	if err != nil {
+		return "", err
+	}
+
+	tempDir := userTempDir + fmt.Sprint(os.Getuid())
+	err = os.Mkdir(tempDir, 0700)
+	if err != nil {
+		return "", err
+	}
+	Debug("CreateTemp: Created temp directory at: " + tempDir)
+	return UsePath(tempDir, true), nil
 }
 
 /*

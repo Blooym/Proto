@@ -6,7 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package config
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"os"
 
 	"github.com/spf13/viper"
@@ -25,7 +25,7 @@ func SetDefaults() {
 	viper.SetDefault("cli.verbose", "false")
 
 	// Configure storage defaults
-	viper.SetDefault("storage.tmp", shared.UsePath("/tmp/proto/", true))
+	viper.SetDefault("storage.tmp", core.UsePath(os.TempDir(), true))
 
 	// Configure app defaults
 	viper.SetDefault("app.force", "false")
@@ -39,4 +39,14 @@ func SetDefaults() {
 		"steam":  "~/.steam/root/compatibilitytools.d/",
 		"lutris": "~/.local/share/lutris/runners/wine/",
 	})
+
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			os.MkdirAll(configDir+"/proto", os.ModePerm)
+			viper.SafeWriteConfig()
+		} else {
+			panic(err)
+		}
+	}
+
 }

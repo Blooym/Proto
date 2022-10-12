@@ -16,20 +16,15 @@ builds:
       - arm64
     ldflags:
       - "-s -w"
-      - "-X 'BitsOfAByte/proto/shared.Version={{.Version}}'"
-      - "-X 'BitsOfAByte/proto/shared.Commit={{.Commit}}'"
-      - "-X 'BitsOfAByte/proto/shared.Date={{.Date}}'"
-
+      - "-X 'BitsOfAByte/proto/core.Version={{.Version}}'"
+      - "-X 'BitsOfAByte/proto/core.Commit={{.Commit}}'"
+      - "-X 'BitsOfAByte/proto/core.Date={{.Date}}'"
 archives:
   - format: zip
-    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-
 checksum:
   name_template: "checksums.txt"
-
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
-
 changelog:
   sort: asc
   use: github
@@ -73,14 +68,39 @@ nfpms:
     provides:
       - proto
     contents:
+      #  Desktop and Store files.
       - src: ./.build_data/dev.bitsofabyte.proto.desktop
         dst: /usr/share/applications/dev.bitsofabyte.proto.desktop
       - src: ./.build_data/dev.bitsofabyte.proto.metainfo.xml
         dst: /usr/share/metainfo/dev.bitsofabyte.proto.metainfo.xml
+
+      # /usr/share/icons files.
+      - dst: /usr/share/icons/proto
+        type: dir
       - src: ./.build_data/icon.png
         dst: /usr/share/icons/proto/icon.png
+
+        # /usr/share/doc files.
+      - dst: /usr/share/doc/proto
+        type: dir
+      - src: ./LICENSE
+        dst: /usr/share/doc/proto/LICENSE
+      - src: ./README.md
+        dst: /usr/share/doc/proto/README
+
+        # Yum/DNF Repository
+      - src: ./.build_data/bitsofabyte.repo
+        dst: /etc/yum.repos.d/bitsofabyte.repo
+        type: config|noreplace
+        packager: rpm
+
+        # APT Repository
+      - src: ./.build_data/bitsofabyte.list
+        dst: /etc/apt/sources.list.d/bitsofabyte.list
+        type: config|noreplace
+        packager: deb
     scripts:
-      postremove: scripts/post-remove.sh
+      postremove: build/scripts/post-remove.sh
     rpm:
       compression: xz
 

@@ -6,7 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -30,15 +30,15 @@ var showConfCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := viper.WriteConfig()
-		shared.CheckError(err)
+		core.CheckError(err)
 
 		file, err := os.Open(viper.ConfigFileUsed())
-		shared.CheckError(err)
+		core.CheckError(err)
 
 		defer file.Close()
 
 		config, err := ioutil.ReadAll(file)
-		shared.CheckError(err)
+		core.CheckError(err)
 
 		fmt.Println(string(config))
 		fmt.Println("Located at: " + viper.ConfigFileUsed())
@@ -55,6 +55,7 @@ var verboseCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		viper.Set("cli.verbose", args[0])
 		viper.WriteConfig()
+		fmt.Println("Verbose mode is now", args[0])
 	},
 }
 
@@ -65,14 +66,14 @@ var tempCmd = &cobra.Command{
 	Example: "proto config temp /tmp/proto/",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Temporary file storage location changed to: " + args[0])
-		viper.Set("storage.tmp", shared.UsePath(args[0], true))
+		viper.Set("storage.tmp", core.UsePath(args[0], true))
 		viper.WriteConfig()
+		fmt.Println("Temporary file storage location changed to: " + args[0])
 	},
 }
 
-var alwaysForceCmd = &cobra.Command{
-	Use:   "alwaysforce <bool>",
+var forceCmd = &cobra.Command{
+	Use:   "force <bool>",
 	Short: "Forces installations to go ahead regardless of missing or invalid checksums",
 	Long: `Enable or disable forcing installations regardless of missing or invalid checksums.
 When disabled, Proto will not allow you to download a file unless it has a valid checksum, if the release does not provide a checksum then it cannot be downloaded.
@@ -240,10 +241,10 @@ var listSourcesCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(configCmd)
 
-	configCmd.AddCommand(tempCmd)
-	configCmd.AddCommand(alwaysForceCmd)
-	configCmd.AddCommand(verboseCmd)
 	configCmd.AddCommand(showConfCmd)
+	configCmd.AddCommand(tempCmd)
+	configCmd.AddCommand(forceCmd)
+	configCmd.AddCommand(verboseCmd)
 	configCmd.AddCommand(sourcesCmd)
 	configCmd.AddCommand(locationsCmd)
 	configCmd.AddCommand(resetCmd)
