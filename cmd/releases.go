@@ -6,7 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"fmt"
 	"os"
 
@@ -34,12 +34,12 @@ var releasesCmd = &cobra.Command{
 
 			source = sourceFlag - 1
 		} else {
-			source = shared.PromptSourceIndex()
+			source = core.PromptSourceIndex()
 		}
 
 		// Get the releases from the backend.
-		releases, err := shared.GetReleases(source)
-		shared.CheckError(err)
+		releases, err := core.GetReleases(source)
+		core.CheckError(err)
 
 		// Create a table to display the releases.
 		table := tablewriter.NewWriter(os.Stdout)

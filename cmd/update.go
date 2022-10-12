@@ -6,7 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"fmt"
 	"os"
 
@@ -19,10 +19,10 @@ var appUpdateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		forceFlag := cmd.Flag("force").Value.String()
 		if forceFlag == "true" {
-			lock := shared.HandleLock()
+			lock := core.HandleLock()
 			defer lock.Unlock()
 
-			shared.AppUpdate(shared.Version)
+			core.AppUpdate(core.Version)
 		} else {
 			fmt.Println("WARNING! You should not use the app-update command unless you have a manual installation of Proto.")
 			fmt.Println("If you are trying to update the app and have installed it with a package manager, use that instead.")

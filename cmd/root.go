@@ -7,7 +7,7 @@ package cmd
 
 import (
 	"BitsOfAByte/proto/config"
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -17,7 +17,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:     "proto",
 	Short:   "Install and manage custom runners with ease ",
-	Version: shared.Version,
+	Version: core.Version,
 }
 
 func Execute() {

@@ -6,7 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -24,7 +24,7 @@ var uninstallCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Prevent the program from having another long-running process
-		lock := shared.HandleLock()
+		lock := core.HandleLock()
 		defer lock.Unlock()
 
 		getDir := cmd.Flags().Lookup("dir").Value.String()
@@ -32,7 +32,7 @@ var uninstallCmd = &cobra.Command{
 			fmt.Println("No operating directory specified, please use the --dir flag to specify either a full path or a custom keyword path (run 'proto config locations -h' for more info).")
 			os.Exit(1)
 		}
-		getDir = shared.UsePath(shared.GetCustomLocation(getDir), true) + args[0]
+		getDir = core.UsePath(core.GetCustomLocation(getDir), true) + args[0]
 
 		if _, err := os.Stat(getDir); os.IsNotExist(err) {
 			fmt.Println("The specified runner was not found at " + filepath.Dir(getDir))
@@ -43,7 +43,7 @@ var uninstallCmd = &cobra.Command{
 		yesFlag := rootCmd.Flag("yes").Value.String()
 		if yesFlag != "true" {
 			// Prompt the user to confirm the uninstall.
-			resp := shared.Prompt("Are you sure you want to uninstall the runner "+args[0]+"? (y/N) ", false)
+			resp := core.Prompt("Are you sure you want to uninstall the runner "+args[0]+"? (y/N) ", false)
 
 			if !resp {
 				os.Exit(0)
@@ -52,7 +52,7 @@ var uninstallCmd = &cobra.Command{
 
 		// Remove the directory for the specified version.
 		err := os.RemoveAll(getDir)
-		shared.CheckError(err)
+		core.CheckError(err)
 
 		fmt.Printf("Successfully uninstalled %s from %s\n", args[0], filepath.Dir(getDir))
 	},

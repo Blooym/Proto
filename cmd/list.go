@@ -6,7 +6,7 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/shared"
+	"BitsOfAByte/proto/core"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -28,7 +28,7 @@ var listCmd = &cobra.Command{
 			fmt.Println("No operating directory specified, please use the --dir flag to specify either a full path or a custom keyword path (run 'proto config locations -h' for more info).")
 			os.Exit(1)
 		}
-		getDir = shared.UsePath(shared.GetCustomLocation(getDir), true)
+		getDir = core.UsePath(core.GetCustomLocation(getDir), true)
 
 		dir, err := ioutil.ReadDir(getDir)
 		if err != nil {
@@ -48,7 +48,7 @@ var listCmd = &cobra.Command{
 		table.SetHeader([]string{"Version", "Size", "Installed", "Remove Command"})
 		var totalSize int64
 		for _, d := range dir {
-			size, err := shared.GetDirSize(getDir + d.Name())
+			size, err := core.GetDirSize(getDir + d.Name())
 
 			// Something went wrong getting the size of the directory.
 			if err != nil {
@@ -57,7 +57,7 @@ var listCmd = &cobra.Command{
 			}
 
 			// Get the size of the directory, and add to the total size, then append to the table.
-			hSize, hUnit := shared.HumanReadableBytes(size)
+			hSize, hUnit := core.HumanReadableBytes(size)
 			totalSize += size
 			table.Append([]string{d.Name(), fmt.Sprintf("%v%s", hSize, hUnit), d.ModTime().Format("2006-01-02"), fmt.Sprintf("proto uninstall %s --dir %s", d.Name(), getDir)})
 		}
@@ -69,7 +69,7 @@ var listCmd = &cobra.Command{
 		}
 
 		// Format the total size and render the table.
-		tSize, tUnit := shared.HumanReadableBytes(totalSize)
+		tSize, tUnit := core.HumanReadableBytes(totalSize)
 		table.SetFooter([]string{"Total", fmt.Sprintf("%v%s", tSize, tUnit), " ", " "})
 		table.Render()
 	},
