@@ -218,7 +218,6 @@ func init() {
 	rootCmd.AddCommand(installCmd)
 
 	// Register the command flags.
-	installCmd.Flags().StringP("dir", "d", "", "The directory to operate in.")
 	installCmd.Flags().BoolP("force", "f", false, "Force installation (ignoring missing or failed checksums)")
 	installCmd.Flags().IntP("source", "s", 0, "Specify the source to install from.")
 

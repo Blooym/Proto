@@ -77,7 +77,4 @@ var listCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-
-	// Register the command flags.
-	listCmd.Flags().StringP("dir", "d", "", "Specify the directory to operate in.")
 }

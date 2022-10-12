@@ -33,6 +33,7 @@ func init() {
 	// Register persistent flags
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose output")
 	rootCmd.PersistentFlags().BoolP("yes", "y", false, "Skip all confirmation prompts")
+	rootCmd.PersistentFlags().StringP("dir", "d", "", "The directory to operate in")
 
 	// Register flags to config
 	viper.BindPFlag("cli.verbose", rootCmd.PersistentFlags().Lookup("verbose"))
