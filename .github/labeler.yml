@@ -12,4 +12,4 @@ changes | tests:
   - "**/*_test.go"
   
 changes | backend:
-  - "backend/**/*"
+  - "core/**/*"
