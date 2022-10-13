@@ -22,6 +22,14 @@ var configCmd = &cobra.Command{
 	Long:  `Configure how Proto works and behaves by changing its configuration file through safe and easy to use commands.`,
 }
 
+var configDirCmd = &cobra.Command{
+	Use:   "dir",
+	Short: "View the directory where the configuration file is stored",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(viper.ConfigFileUsed())
+	},
+}
+
 var showConfCmd = &cobra.Command{
 	Use:     "show",
 	Short:   "Show the current configuration",
@@ -242,6 +250,7 @@ func init() {
 	rootCmd.AddCommand(configCmd)
 
 	configCmd.AddCommand(showConfCmd)
+	configCmd.AddCommand(configDirCmd)
 	configCmd.AddCommand(tempCmd)
 	configCmd.AddCommand(forceCmd)
 	configCmd.AddCommand(verboseCmd)
