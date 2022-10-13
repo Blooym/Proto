@@ -20,7 +20,6 @@ func main() {
 
 	generateAPTRepoFile()
 	generateDNFRepoFile()
-	generateRootAllowed()
 	generateDesktop()
 	generateMetainfo()
 	generateIcon()
@@ -127,12 +126,6 @@ func generateMetainfo() {
 </component>`
 
 	createBuildFile("dev.bitsofabyte.proto.metainfo.xml", fileData)
-}
-
-// Generate a root allowed file, preventing using root is false.
-func generateRootAllowed() {
-	fileData := `false`
-	createBuildFile("rootallowed", fileData)
 }
 
 // Fetch the icon from the assets and put it in the build directory

@@ -9,7 +9,6 @@ import (
 	"BitsOfAByte/proto/core"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/google/go-github/v44/github"
 	cobra "github.com/spf13/cobra"
@@ -67,20 +66,12 @@ var installCmd = &cobra.Command{
 		case 0: // Install latest tag.
 			data, err := core.GetReleases(source)
 			if err != nil {
-				if strings.ContainsAny(err.Error(), "Temporary failure in name resolution") {
-					fmt.Println("You are not connected to the internet. Please connect to the internet and try again.")
-					os.Exit(1)
-				}
 				panic(err)
 			}
 			tagData = data[0]
 		default: // Install a specific tag.
 			data, err := core.GetReleaseData(source, args[0])
 			if err != nil {
-				if strings.ContainsAny(err.Error(), "Temporary failure in name resolution") {
-					fmt.Println("You are not connected to the internet. Please connect to the internet and try again.")
-					os.Exit(1)
-				}
 				panic(err)
 			}
 			tagData = data
