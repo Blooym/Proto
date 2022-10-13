@@ -19,25 +19,45 @@ Install and manage custom runners with ease on supported systems.
 <!-- Repository Header End -->
 
 ## About
-Proto is a tool designed to make downloading and managing custom runner installations as convinent and easy as possible. It provides support for multiple sources, custom installation directories, in-tool release data and more. 
 
-## How to Use
-First off, you'll need to download Proto to your system using one of the supported [installation methods](#installation). Once you have it installed, the entire app is documented in the command line by running the `--help` flag after any command, which will provide details on how to use it. 
+Proto is a command line tool designed to make it easier to manage custom runner installations (eg. Proton-GE) without the need to manually navigate the filesystem or extract tar files when a new build is released. 
 
-Configuration is also provided by running the `proto config` command, which will allow you to tweak a variety of settings straight from the command line.
+### Key Features
 
-Proto can only install from archive formats supported by GNU tar.
+  - The ability to add multiple runner release sources (GitHub only, must ship the runner in a `.tar` format)
+  - The ability to bind directories to keywords so you don't have to remember or type them every time (ig. `steam` -> `~/.steam/root/compatabilitytools.d`)
+  - The ability to pull information about any release directly from GitHub
+  - Powerful but minimal configuration (which is stored in a very portable format)
+  - Fully documented through the command line using the `-h` flag after any command
+  - Shell completion for bash, fish, powershell and zsh (via the `completion` command)
+  - A built in app-updater for manual binary installs
+  - Responsive & easy to use
+  - Checksum validation (sha512sum only)
+
+## Usage
+
+Proto is fully documentated from the command line by using the `-h` flag after any command, which includes usage examples and a full list of flags/arguments. A basic installation from *Source #1* to the *Steam* directory would look like:
+```
+proto install --dir steam --source 1
+```
+
+You can tweak the configuration for Proto by running the following:
+```
+proto config
+```
+
 
 ## Installation
 
 ### Dependancies
 Proto currently requires the following packages in order to function: [tar](https://www.gnu.org/software/tar/)
 
-If you are using a package manager to install, these should be automatically installed alongside Proto if they are missing from your system, however if you are building from source or installing from an archive, make sure these are also present. It is planned to be dependency free by time a full release is made. 
+If you are using a package manager to install, these should be automatically installed alongside Proto if they are missing from your system, however if you are building from source or installing from an archive, make sure these are also present. 
 
 ### Methods
 
 #### APT Package Manager
+
 If you are using an Ubuntu-derivative system then use this installation method.
 
 <details>
@@ -60,6 +80,7 @@ sudo apt install proto
 ---
 
 #### Yum/DNF Package Manager
+
 If you are using Fedora, OpenSUSE, or any other system that supports the yum/dnf package manager then use this installation method.
 
 <details>
@@ -85,6 +106,7 @@ sudo yum install proto
 ---
 
 #### Homebrew Package Manager
+
 If your distributions package manager is not listed here or you wish to use [Homebrew](https://brew.sh).
 
 <details>
@@ -111,20 +133,22 @@ brew install proto
 ---
 
 #### Manual Installation
-Manually install a Binary from the release Archives.
+
+Manually download a release file from the GitHub releases.
 <details>  
 <summary>Show Steps</summary>
   
 1. Download the [newest release](https://github.com/BitsOfAByte/proto/releases/latest) for your system/architecture
-2. Extract the binary into your system path or add the binary to your path.
+2. Extract the tar archive or install a `.rpm`/`.deb` package (these will also provide the repository to handle automatic updates)
 
-If you aren't sure on what architecture you need to download, you should try `amd64` first as it is the most common for everyday hardware.
+If you aren't sure on what architecture you need to download, you should try `amd64` first as it is the most common.
 
 </details>
 
 ---
 
 #### From Source
+
 Build Proto directly from the GitHub source for any supported platform.
 <details>  
 <summary>Show Steps</summary>
@@ -135,6 +159,6 @@ Building Proto from source is not recommended for beginners, but if you know wha
 3. Clone the repository to your system with `git clone https://github.com/BitsOfAByte/proto`
 4. Inside the repository directory, run `goreleaser build --single-target --rm-dist --snapshot` to build.
 
-You will find the compiled binary for your OS & Arch inside of the `/dist` folder.
+You will find the compiled binary for your OS & Arch inside of the `/dist` folder. Any time you want to update your build you can run `proto app-update`.
 
 </details>  
