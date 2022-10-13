@@ -60,6 +60,7 @@ Name=Proto
 Comment=Proto compatability & runner manager
 Icon=/usr/share/icons/proto/icon.png
 Exec=proto
+Terminal=true
 Categories=ConsoleOnly;Utility;X-GNOME-Utilities;FileTools;
 Keywords=proton;steamplay;wine;runner;
 NoDisplay=true
@@ -91,13 +92,20 @@ func generateMetainfo() {
   <name>Proto</name>
   <developer_name>BitsOfAByte</developer_name>
   <content_rating type="oars-1.1" />
+  <icon type="local" width="128" height="128">/usr/share/icons/proto/icon.png</icon>
   <launchable type="desktop-id">dev.bitsofabyte.proto.desktop</launchable>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <summary>Manage custom runner installations</summary>
   <description>
     <p>
-      Install and manage custom runners with ease in the command-line. Proto is a tool for managing custom wine runners for multiple programs without the need to manually download and extract them.
+      Install and manage custom runners with ease from the command-line. Proto is a tool for managing custom wine runners for multiple programs without the need to manually download and extract them.
+
+	  Features:
+	  	- Multi-user support with no additional setup
+		- Intuitive CLI with powerful configuration
+		- Deep information about installed runners & new releases
+		- & more!
     </p>
   </description>
 
