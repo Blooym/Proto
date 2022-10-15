@@ -18,7 +18,12 @@ builds:
       - "-s -w"
       - "-X 'BitsOfAByte/proto/core.Version={{.Version}}'"
       - "-X 'BitsOfAByte/proto/core.Commit={{.Commit}}'"
-      - "-X 'BitsOfAByte/proto/core.Date={{.Date}}'"
+      - "-X 'BitsOfAByte/proto/core.Date={{.CommitDate}}'"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    hooks:
+      post:
+        - env SKIP_COMPRESS={{ if index .Env "SKIP_COMPRESS"  }}{{ .Env.SKIP_COMPRESS }}{{ else }}false{{ end }} ./build/scripts/upx.sh {{ .Path }}
+
 archives:
   - format: zip
 checksum:
