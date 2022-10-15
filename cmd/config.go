@@ -247,7 +247,7 @@ var listSourcesCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(configCmd)
+	RootCmd.AddCommand(configCmd)
 
 	configCmd.AddCommand(showConfCmd)
 	configCmd.AddCommand(configDirCmd)

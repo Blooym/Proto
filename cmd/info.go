@@ -53,7 +53,7 @@ var infoCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(infoCmd)
+	RootCmd.AddCommand(infoCmd)
 
 	infoCmd.Flags().IntP("source", "s", 0, "The index of the source to use.")
 }

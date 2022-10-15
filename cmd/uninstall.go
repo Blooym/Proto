@@ -40,7 +40,7 @@ var uninstallCmd = &cobra.Command{
 		}
 
 		// Prompt the user to confirm unless -y flag is set.
-		yesFlag := rootCmd.Flag("yes").Value.String()
+		yesFlag := RootCmd.Flag("yes").Value.String()
 		if yesFlag != "true" {
 			// Prompt the user to confirm the uninstall.
 			resp := core.Prompt("Are you sure you want to uninstall the runner "+args[0]+"? (y/N) ", false)
@@ -59,5 +59,5 @@ var uninstallCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(uninstallCmd)
+	RootCmd.AddCommand(uninstallCmd)
 }

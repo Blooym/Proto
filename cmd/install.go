@@ -77,7 +77,7 @@ var installCmd = &cobra.Command{
 			tagData = data
 		}
 
-		yesFlag := rootCmd.Flag("yes").Value.String()
+		yesFlag := RootCmd.Flag("yes").Value.String()
 		s, m := core.HumanReadableBytes(core.GetTotalAssetSize(tagData.Assets))
 
 		/**
@@ -206,7 +206,7 @@ var installCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(installCmd)
+	RootCmd.AddCommand(installCmd)
 
 	// Register the command flags.
 	installCmd.Flags().BoolP("force", "f", false, "Force installation (ignoring missing or failed checksums)")

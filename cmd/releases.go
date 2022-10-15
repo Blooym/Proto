@@ -68,7 +68,7 @@ var releasesCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(releasesCmd)
+	RootCmd.AddCommand(releasesCmd)
 
 	// Register command flags
 	releasesCmd.Flags().IntP("limit", "l", 5, "Limit the number of releases to show.")

@@ -33,7 +33,7 @@ var appUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(appUpdateCmd)
+	RootCmd.AddCommand(appUpdateCmd)
 
 	appUpdateCmd.Flags().BoolP("force", "f", false, "Force the updater to run")
 }

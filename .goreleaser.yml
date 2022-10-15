@@ -79,13 +79,17 @@ nfpms:
       - src: ./.build_data/dev.bitsofabyte.proto.metainfo.xml
         dst: /usr/share/metainfo/dev.bitsofabyte.proto.metainfo.xml
 
-      # /usr/share/icons files.
+      # Icon files.
       - dst: /usr/share/icons/proto
         type: dir
       - src: ./.build_data/icon.png
         dst: /usr/share/icons/proto/icon.png
 
-        # /usr/share/doc files.
+      # Man pages.
+      - src: ./.build_data/man/
+        dst: /usr/share/man/man1/
+
+      # Doc files.
       - dst: /usr/share/doc/proto
         type: dir
       - src: ./LICENSE
@@ -93,19 +97,17 @@ nfpms:
       - src: ./README.md
         dst: /usr/share/doc/proto/README
 
-        # Yum/DNF Repository
+      # Yum/DNF repository.
       - src: ./.build_data/bitsofabyte.repo
         dst: /etc/yum.repos.d/bitsofabyte.repo
         type: config|noreplace
         packager: rpm
 
-        # APT Repository
+      # APT repository.
       - src: ./.build_data/bitsofabyte.list
         dst: /etc/apt/sources.list.d/bitsofabyte.list
         type: config|noreplace
         packager: deb
-    scripts:
-      postremove: build/scripts/post-remove.sh
     rpm:
       compression: xz
 

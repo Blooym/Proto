@@ -14,14 +14,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:     "proto",
 	Short:   "Install and manage custom runners with ease ",
 	Version: core.Version,
 }
 
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -31,12 +31,12 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Register persistent flags
-	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose output")
-	rootCmd.PersistentFlags().BoolP("yes", "y", false, "Skip all confirmation prompts")
-	rootCmd.PersistentFlags().StringP("dir", "d", "", "The directory to operate in")
+	RootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose output")
+	RootCmd.PersistentFlags().BoolP("yes", "y", false, "Skip all confirmation prompts")
+	RootCmd.PersistentFlags().StringP("dir", "d", "", "The directory to operate in")
 
 	// Register flags to config
-	viper.BindPFlag("cli.verbose", rootCmd.PersistentFlags().Lookup("verbose"))
+	viper.BindPFlag("cli.verbose", RootCmd.PersistentFlags().Lookup("verbose"))
 }
 
 // Initialize proto configuration file
