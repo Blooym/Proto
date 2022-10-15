@@ -6,32 +6,32 @@ class Proto < Formula
   desc "Proto compatability tool manager
 "
   homepage "https://github.com/BitsOfAByte/proto"
-  version "0.12.2"
+  version "0.12.3"
   license "GPL-3.0-only"
 
   depends_on "gnu-tar"
   depends_on :linux
 
   on_linux do
-    if Hardware::CPU.arm? && !Hardware::CPU.is_64_bit?
-      url "https://github.com/BitsOfAByte/proto/releases/download/v0.12.2/proto_0.12.2_linux_armv6.zip"
-      sha256 "8ba9f3145ef94919f211e3a1081fba0da72d2aeef1e0aac248e7e6de14e25c42"
+    if Hardware::CPU.intel?
+      url "https://github.com/BitsOfAByte/proto/releases/download/v0.12.3/proto_0.12.3_linux_amd64.zip"
+      sha256 "df7bbfaa6960bf359444492aa7d7f43da123ce8c1be91d01822e44398c0a3c2e"
 
       def install
         bin.install "proto"
       end
     end
-    if Hardware::CPU.intel?
-      url "https://github.com/BitsOfAByte/proto/releases/download/v0.12.2/proto_0.12.2_linux_amd64.zip"
-      sha256 "50f2b890649f19d931a2a6c8bc3421c19cf7cd886c4e30601f58f9f6f97bf859"
+    if Hardware::CPU.arm? && !Hardware::CPU.is_64_bit?
+      url "https://github.com/BitsOfAByte/proto/releases/download/v0.12.3/proto_0.12.3_linux_armv6.zip"
+      sha256 "9018d4638fe0631a6ebfd52ba7180cb273d22ad0b33a6b79471f84a855b7c229"
 
       def install
         bin.install "proto"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/BitsOfAByte/proto/releases/download/v0.12.2/proto_0.12.2_linux_arm64.zip"
-      sha256 "07e3048f3a6f156b08b40fa3e3fffe3f4ab86f868e9c876ffee68ea0841fa171"
+      url "https://github.com/BitsOfAByte/proto/releases/download/v0.12.3/proto_0.12.3_linux_arm64.zip"
+      sha256 "fee9b6197e8de96667c323a338311ba960bba3e43219bd8d64046b299ce8ccd7"
 
       def install
         bin.install "proto"
