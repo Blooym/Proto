@@ -163,7 +163,7 @@ func generateIcon() {
 func generateMANPages() {
 	// Generate the man pages
 	header := &doc.GenManHeader{
-		Title:   "PROTO}",
+		Title:   "PROTO",
 		Section: "1",
 		Source:  "Proto",
 		Manual:  "Proto Manual",
