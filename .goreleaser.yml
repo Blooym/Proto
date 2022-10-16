@@ -26,6 +26,13 @@ builds:
 
 archives:
   - format: zip
+    files:
+      - LICENSE*
+      - README*
+      - CHANGELOG*
+      - src: ./.build_data/man/*.gz
+        dst: manpages/
+        strip_parent: true
 checksum:
   name_template: "checksums.txt"
 snapshot:
