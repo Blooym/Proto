@@ -6,9 +6,9 @@ GPLv3 License, see the LICENSE file for more information.
 package config
 
 import (
-	"BitsOfAByte/proto/core"
 	"os"
 
+	"github.com/BitsOfAByte/proto/core"
 	"github.com/spf13/viper"
 )
 

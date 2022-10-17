@@ -6,10 +6,10 @@ GPLv3 License, see the LICENSE file for more information.
 package cmd
 
 import (
-	"BitsOfAByte/proto/core"
 	"fmt"
 	"os"
 
+	"github.com/BitsOfAByte/proto/core"
 	"github.com/spf13/cobra"
 )
 

@@ -5,8 +5,9 @@ Copyright © 2022 BitsOfAByte
 package main
 
 import (
-	"BitsOfAByte/proto/cmd"
 	"fmt"
+
+	"github.com/BitsOfAByte/proto/cmd"
 )
 
 func main() {

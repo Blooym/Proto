@@ -6,14 +6,14 @@ GPLv3 License, see the LICENSE file for more information.
 package main
 
 import (
-	"BitsOfAByte/proto/cmd"
-	"BitsOfAByte/proto/core"
 	"bytes"
 	"compress/gzip"
 	"io"
 	"io/ioutil"
 	"os"
 
+	"github.com/BitsOfAByte/proto/cmd"
+	"github.com/BitsOfAByte/proto/core"
 	"github.com/spf13/cobra/doc"
 )
 
