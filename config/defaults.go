@@ -32,8 +32,6 @@ func SetDefaults() {
 	viper.SetDefault("app.sources", []string{
 		"GloriousEggroll/proton-ge-custom",
 		"GloriousEggroll/wine-ge-custom",
-		"bottlesdevs/wine",
-		"lutris/wine",
 	})
 	viper.SetDefault("app.customlocations", map[string]string{
 		"steam":  "~/.steam/root/compatibilitytools.d/",
