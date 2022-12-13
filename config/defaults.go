@@ -36,6 +36,7 @@ func SetDefaults() {
 	viper.SetDefault("app.customlocations", map[string]string{
 		"steam":  "~/.steam/root/compatibilitytools.d/",
 		"lutris": "~/.local/share/lutris/runners/wine/",
+		"lutrisflatpak": "~/.var/app/net.lutris.Lutris/data/lutris/runners/wine",
 	})
 
 	if err := viper.ReadInConfig(); err != nil {
