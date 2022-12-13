@@ -26,7 +26,13 @@ var configDirCmd = &cobra.Command{
 	Use:   "dir",
 	Short: "View the directory where the configuration file is stored",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(viper.ConfigFileUsed())
+		configDir := viper.ConfigFileUsed()
+		if configDir == "" {
+			fmt.Println("No configuration file exists yet.")
+			return
+		}
+
+		fmt.Println(configDir)
 	},
 }
 

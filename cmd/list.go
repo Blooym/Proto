@@ -45,7 +45,7 @@ var listCmd = &cobra.Command{
 
 		// Get all of the installed versions and their sizes and create a table to display them.
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Version", "Size", "Installed", "Remove Command"})
+		table.SetHeader([]string{"Version", "Size", "Installed"})
 		var totalSize int64
 		for _, d := range dir {
 			size, err := core.GetDirSize(getDir + d.Name())
@@ -59,7 +59,7 @@ var listCmd = &cobra.Command{
 			// Get the size of the directory, and add to the total size, then append to the table.
 			hSize, hUnit := core.HumanReadableBytes(size)
 			totalSize += size
-			table.Append([]string{d.Name(), fmt.Sprintf("%v%s", hSize, hUnit), d.ModTime().Format("2006-01-02"), fmt.Sprintf("proto uninstall %s --dir %s", d.Name(), getDir)})
+			table.Append([]string{d.Name(), fmt.Sprintf("%v%s", hSize, hUnit), d.ModTime().Format("2006-01-02")})
 		}
 
 		// No installed versions found in the install directory.
@@ -70,7 +70,7 @@ var listCmd = &cobra.Command{
 
 		// Format the total size and render the table.
 		tSize, tUnit := core.HumanReadableBytes(totalSize)
-		table.SetFooter([]string{"Total", fmt.Sprintf("%v%s", tSize, tUnit), " ", " "})
+		table.SetFooter([]string{"Total", fmt.Sprintf("%v%s", tSize, tUnit), " "})
 		table.Render()
 	},
 }
