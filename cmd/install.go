@@ -124,16 +124,8 @@ var installCmd = &cobra.Command{
 		tar, sum, err := core.GetValidAssets(tagData)
 		core.CheckError(err)
 
-		// Handle the lack of a checksum depending on the user's preference.
-		if sum == nil {
-			forced := viper.GetBool("app.force")
-
-			if !forced {
-				fmt.Println("No checksum file found, aborting install. (Use --force to ignore this error this time)")
-				os.Exit(1)
-			}
-
-			fmt.Println("Warning: No checksum file found, continuing without verification (forced).")
+		if sum == nil && !viper.GetBool("app.force") {
+			fmt.Println("No checksum file was found for this release, skipping checksum verification.")
 		}
 
 		// Download the assets to the temp directory.
