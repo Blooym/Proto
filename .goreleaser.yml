@@ -16,9 +16,9 @@ builds:
       - arm64
     ldflags:
       - "-s -w"
-      - "-X 'BitsOfAByte/proto/core.Version={{.Version}}'"
-      - "-X 'BitsOfAByte/proto/core.Commit={{.Commit}}'"
-      - "-X 'BitsOfAByte/proto/core.Date={{.CommitDate}}'"
+      - "-X 'github.com/BitsOfAByte/proto/core.Version={{.Version}}'"
+      - "-X 'github.com/BitsOfAByte/proto/core.Commit={{.Commit}}'"
+      - "-X 'github.com/BitsOfAByte/proto/core.Date={{.CommitDate}}'"
     mod_timestamp: "{{ .CommitTimestamp }}"
     hooks:
       post:
