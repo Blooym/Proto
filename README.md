@@ -79,26 +79,26 @@ sudo apt install proto
 
 ---
 
-#### Yum/DNF Package Manager
+#### DNF Package Manager
 
-If you are using Fedora, OpenSUSE, or any other system that supports the yum/dnf package manager then use this installation method.
+If you are using Fedora, OpenSUSE, or any other system that supports the DNF package manager then use this installation method.
 
 <details>
 <summary>Show Steps</summary>
 <br>
   
-1. Add the repository hosting Proto to your yum/dnf repo directory (Only run this once)
+1. Add the repository hosting Proto to your DNF repo directory (Only run this once)
 ```
 echo "[BitsOfAByte]            
 name=BitsOfAByte Packages         
 baseurl=https://packages.bitsofabyte.dev/yum/
 enabled=1
-gpgcheck=0" | sudo tee -a /etc/yum.repos.d/bitsofabyte.repo && sudo yum update
+gpgcheck=0" | sudo tee -a /etc/yum.repos.d/bitsofabyte.repo && sudo dnf update
 ``` 
 
 2. Install Proto to your system
 ```
-sudo yum install proto
+sudo dnf install proto
 ```
 
 </details>  
