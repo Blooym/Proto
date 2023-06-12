@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 BitsOfAByte
+Copyright © 2022 Blooym
 
 GPLv3 License, see the LICENSE file for more information.
 */
@@ -21,7 +21,7 @@ import (
 		entryIndex<int>: The index of the source to get the owner and repo from.
 	Example:
 		owner, repo := FormatRepo(0)
-		fmt.Println(owner) // BitsOfAByte
+		fmt.Println(owner) // Blooym
 		fmt.Println(repo) // proto
 	Returns:
 		string: The owner of the repo.

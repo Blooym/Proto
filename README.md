@@ -5,11 +5,11 @@
   
 Install and manage custom runners with ease on supported systems.
 
-**[View Issues](https://github.com/BitsOfAByte/proto/issues) · [Install](#installation) · [Contributing](https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md)**
+**[View Issues](https://github.com/Blooym/proto/issues) · [Install](#installation) · [Contributing](https://github.com/Blooym/proto/blob/main/CONTRIBUTING.md)**
   
 <a href="#"> 
-  <img src="https://img.shields.io/github/downloads/BitsOfAByte/proto/total?style=flat" alt="Download Count Badge">
-  <img src="https://img.shields.io/github/v/tag/BitsOfAByte/proto?color=blue&label=Version&sort=semver&style=flat" alt="Release Badge">
+  <img src="https://img.shields.io/github/downloads/Blooym/proto/total?style=flat" alt="Download Count Badge">
+  <img src="https://img.shields.io/github/v/tag/Blooym/proto?color=blue&label=Version&sort=semver&style=flat" alt="Release Badge">
 </a>
   
 </div>
@@ -67,7 +67,7 @@ If you are using an Ubuntu-derivative system then use this installation method.
   
 1. Add the repository hosting Proto to your apt sources directory (Only run this once)
 ```
-echo "deb [trusted=yes] https://packages.bitsofabyte.dev/apt/ /" | sudo tee -a /etc/apt/sources.list.d/bitsofabyte.list && sudo apt update
+echo "deb [trusted=yes] https://packages.blooym.dev/apt/ /" | sudo tee -a /etc/apt/sources.list.d/blooym.list && sudo apt update
 ``` 
 
 2. Install Proto to your system
@@ -89,11 +89,11 @@ If you are using Fedora, OpenSUSE, or any other system that supports the DNF pac
   
 1. Add the repository hosting Proto to your DNF repo directory (Only run this once)
 ```
-echo "[BitsOfAByte]            
-name=BitsOfAByte Packages         
-baseurl=https://packages.bitsofabyte.dev/yum/
+echo "[Blooym]            
+name=Blooym Packages         
+baseurl=https://packages.blooym.dev/yum/
 enabled=1
-gpgcheck=0" | sudo tee -a /etc/yum.repos.d/bitsofabyte.repo && sudo dnf update
+gpgcheck=0" | sudo tee -a /etc/yum.repos.d/blooym.repo && sudo dnf update
 ``` 
 
 2. Install Proto to your system
@@ -120,7 +120,7 @@ If your distributions package manager is not listed here or you wish to use [Hom
 
 2. Add the tap for Proto to homebrew
 ```
-brew tap BitsOfAByte/proto https://github.com/BitsOfAByte/proto.git
+brew tap Blooym/proto https://github.com/Blooym/proto.git
 ```
 
 3. Install proto to your system
@@ -138,7 +138,7 @@ Manually download a release file from the GitHub releases.
 <details>  
 <summary>Show Steps</summary>
   
-1. Download the [newest release](https://github.com/BitsOfAByte/proto/releases/latest) for your system/architecture
+1. Download the [newest release](https://github.com/Blooym/proto/releases/latest) for your system/architecture
 2. Extract the tar archive or install a `.rpm`/`.deb` package (these will also provide the repository to handle automatic updates)
 
 If you aren't sure on what architecture you need to download, you should try `amd64` first as it is the most common.

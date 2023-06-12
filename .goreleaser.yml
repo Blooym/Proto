@@ -16,9 +16,9 @@ builds:
       - arm64
     ldflags:
       - "-s -w"
-      - "-X 'github.com/BitsOfAByte/proto/core.Version={{.Version}}'"
-      - "-X 'github.com/BitsOfAByte/proto/core.Commit={{.Commit}}'"
-      - "-X 'github.com/BitsOfAByte/proto/core.Date={{.CommitDate}}'"
+      - "-X 'github.com/Blooym/proto/core.Version={{.Version}}'"
+      - "-X 'github.com/Blooym/proto/core.Commit={{.Commit}}'"
+      - "-X 'github.com/Blooym/proto/core.Date={{.CommitDate}}'"
     mod_timestamp: "{{ .CommitTimestamp }}"
     hooks:
       post:
@@ -49,7 +49,7 @@ changelog:
 
 brews:
   - tap:
-      owner: BitsOfAByte
+      owner: Blooym
       name: proto
     commit_author:
       name: github-actions
@@ -59,14 +59,14 @@ brews:
     commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
     description: |
       Proto compatability tool manager
-    homepage: "https://github.com/BitsOfAByte/proto"
+    homepage: "https://github.com/Blooym/proto"
     license: "GPL-3.0-only"
 
 nfpms:
-  - vendor: BitsOfAByte
+  - vendor: Blooym
     id: nfpm
-    homepage: https://github.com/BitsOfAByte/proto
-    maintainer: BitsOfAByte
+    homepage: https://github.com/Blooym/proto
+    maintainer: Blooym
     description: |
       Proto compatability tool manager
     license: "GPL-3.0"
@@ -81,10 +81,10 @@ nfpms:
       - proto
     contents:
       #  Desktop and Store files.
-      - src: ./.build_data/dev.bitsofabyte.proto.desktop
-        dst: /usr/share/applications/dev.bitsofabyte.proto.desktop
-      - src: ./.build_data/dev.bitsofabyte.proto.metainfo.xml
-        dst: /usr/share/metainfo/dev.bitsofabyte.proto.metainfo.xml
+      - src: ./.build_data/dev.blooym.proto.desktop
+        dst: /usr/share/applications/dev.blooym.proto.desktop
+      - src: ./.build_data/dev.blooym.proto.metainfo.xml
+        dst: /usr/share/metainfo/dev.blooym.proto.metainfo.xml
 
       # Icon files.
       - dst: /usr/share/icons/proto
@@ -105,29 +105,29 @@ nfpms:
         dst: /usr/share/doc/proto/README
 
       # Yum/DNF repository.
-      - src: ./.build_data/bitsofabyte.repo
-        dst: /etc/yum.repos.d/bitsofabyte.repo
+      - src: ./.build_data/blooym.repo
+        dst: /etc/yum.repos.d/blooym.repo
         type: config|noreplace
         packager: rpm
 
       # APT repository.
-      - src: ./.build_data/bitsofabyte.list
-        dst: /etc/apt/sources.list.d/bitsofabyte.list
+      - src: ./.build_data/blooym.list
+        dst: /etc/apt/sources.list.d/blooym.list
         type: config|noreplace
         packager: deb
     rpm:
       compression: xz
 
 publishers:
-  - name: "packages.bitsofabyte.dev"
+  - name: "packages.blooym.dev"
     dir: "{{ dir .ArtifactPath }}"
     ids:
       - nfpm
     cmd: |
-      curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/BitsOfAByte/
+      curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/Blooym/
 
 release:
   github:
-    owner: BitsOfAByte
+    owner: Blooym
     name: proto
   prerelease: auto

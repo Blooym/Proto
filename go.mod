@@ -1,4 +1,4 @@
-module github.com/BitsOfAByte/proto
+module github.com/Blooym/proto
 
 go 1.18
 

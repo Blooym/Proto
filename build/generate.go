@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 BitsOfAByte
+Copyright © 2022 Blooym
 
 GPLv3 License, see the LICENSE file for more information.
 */
@@ -12,8 +12,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/BitsOfAByte/proto/cmd"
-	"github.com/BitsOfAByte/proto/core"
+	"github.com/Blooym/proto/cmd"
+	"github.com/Blooym/proto/core"
 	"github.com/spf13/cobra/doc"
 )
 
@@ -73,34 +73,34 @@ Keywords=proton;steamplay;wine;runner;
 NoDisplay=true
 `
 
-	createBuildFile("dev.bitsofabyte.proto.desktop", fileData)
+	createBuildFile("dev.blooym.proto.desktop", fileData)
 }
 
 func generateDNFRepoFile() {
-	fileData := `[BitsOfAByte]            
-name=BitsOfAByte Packages         
-baseurl=https://packages.bitsofabyte.dev/yum/
+	fileData := `[Blooym]            
+name=Blooym Packages         
+baseurl=https://packages.blooym.dev/yum/
 enabled=1
 gpgcheck=0`
-	createBuildFile("bitsofabyte.repo", fileData)
+	createBuildFile("blooym.repo", fileData)
 }
 
 func generateAPTRepoFile() {
-	fileData := `deb [trusted=yes] https://packages.bitsofabyte.dev/apt/ /`
-	createBuildFile("bitsofabyte.list", fileData)
+	fileData := `deb [trusted=yes] https://packages.blooym.dev/apt/ /`
+	createBuildFile("blooym.list", fileData)
 }
 
 // Generate the .metainfo.xml file
 func generateMetainfo() {
 	fileData := `<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2020 BitsOfAByte -->
+<!-- Copyright 2020 Blooym -->
 <component type="desktop-application">
-  <id>dev.bitsofabyte.proto</id>
+  <id>dev.blooym.proto</id>
   <name>Proto</name>
-  <developer_name>BitsOfAByte</developer_name>
+  <developer_name>Blooym</developer_name>
   <content_rating type="oars-1.1" />
   <icon type="local" width="128" height="128">/usr/share/icons/proto/icon.png</icon>
-  <launchable type="desktop-id">dev.bitsofabyte.proto.desktop</launchable>
+  <launchable type="desktop-id">dev.blooym.proto.desktop</launchable>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <summary>Manage custom runner installations</summary>
@@ -123,7 +123,7 @@ func generateMetainfo() {
   <screenshots>
     <screenshot type="default">
       <caption>The Main CLI Page</caption>
-      <image type="source">https://raw.githubusercontent.com/BitsOfAByte/proto/main/.assets/Screenshots/main_app_screenshot.png</image>
+      <image type="source">https://raw.githubusercontent.com/Blooym/proto/main/.assets/Screenshots/main_app_screenshot.png</image>
     </screenshot>
   </screenshots>
 
@@ -134,13 +134,13 @@ func generateMetainfo() {
 	<control>console</control>
   </recommends>
 
-  <url type="homepage">https://github.com/BitsOfAByte/proto</url>
-  <url type="bugtracker">https://github.com/BitsOfAByte/proto/issues</url>
-  <url type="faq">https://github.com/BitsOfAByte/proto#readme</url>
-  <url type="help">https://github.com/BitsOfAByte/proto#readme</url>
+  <url type="homepage">https://github.com/Blooym/proto</url>
+  <url type="bugtracker">https://github.com/Blooym/proto/issues</url>
+  <url type="faq">https://github.com/Blooym/proto#readme</url>
+  <url type="help">https://github.com/Blooym/proto#readme</url>
 </component>`
 
-	createBuildFile("dev.bitsofabyte.proto.metainfo.xml", fileData)
+	createBuildFile("dev.blooym.proto.metainfo.xml", fileData)
 }
 
 // Fetch the icon from the assets and put it in the build directory

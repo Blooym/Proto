@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 BitsOfAByte
+Copyright © 2022 Blooym
 
 GPLv3 License, see the LICENSE file for more information.
 */
@@ -10,7 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/BitsOfAByte/proto/core"
+	"github.com/Blooym/proto/core"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )

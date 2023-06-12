@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 BitsOfAByte
+Copyright © 2022 Blooym
 
 GPLv3 License, see the LICENSE file for more information.
 */
@@ -23,7 +23,7 @@ import (
 */
 func AppUpdate(version string) {
 	updater, _ := selfupdate.NewUpdater(selfupdate.Config{Validator: &selfupdate.ChecksumValidator{UniqueFilename: "checksums.txt"}})
-	latest, found, err := updater.DetectLatest("BitsOfAByte/proto")
+	latest, found, err := updater.DetectLatest("Blooym/proto")
 
 	// Unknown error occurred, abort update process.
 	CheckError(err)

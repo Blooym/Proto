@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 BitsOfAByte
+Copyright © 2022 Blooym
 
 GPLv3 License, see the LICENSE file for more information.
 */
@@ -8,8 +8,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/BitsOfAByte/proto/config"
-	"github.com/BitsOfAByte/proto/core"
+	"github.com/Blooym/proto/config"
+	"github.com/Blooym/proto/core"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

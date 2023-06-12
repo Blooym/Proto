@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 BitsOfAByte
+Copyright © 2022 Blooym
 
 */
 package main
@@ -7,7 +7,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/BitsOfAByte/proto/cmd"
+	"github.com/Blooym/proto/cmd"
 )
 
 func main() {
