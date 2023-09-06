@@ -1,8 +1,3 @@
-/*
-Copyright © 2022 Blooym
-
-GPLv3 License, see the LICENSE file for more information.
-*/
 package core
 
 import (
@@ -12,11 +7,14 @@ import (
 )
 
 /*
-	Debug is a function that prints a debug message to the console if the verbose flag is set.
-	Arguments:
-		msg<string>: The message to print
-	Example:
-		Debug("This is a debug message.")
+Debug is a function that prints a debug message to the console if the verbose flag is set.
+Arguments:
+
+	msg<string>: The message to print
+
+Example:
+
+	Debug("This is a debug message.")
 */
 func Debug(msg string) {
 	if viper.GetBool("cli.verbose") {
@@ -25,11 +23,14 @@ func Debug(msg string) {
 }
 
 /*
-	CheckError is a function that checks if an error is nil. If it is not, it will panic.
-	Arguments:
-		err<error>: The error to check
-	Example:
-		CheckError(err)
+CheckError is a function that checks if an error is nil. If it is not, it will panic.
+Arguments:
+
+	err<error>: The error to check
+
+Example:
+
+	CheckError(err)
 */
 func CheckError(err error) {
 	if err != nil {

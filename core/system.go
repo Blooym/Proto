@@ -1,8 +1,3 @@
-/*
-Copyright © 2022 Blooym
-
-GPLv3 License, see the LICENSE file for more information.
-*/
 package core
 
 import (
@@ -14,12 +9,15 @@ import (
 )
 
 /*
-	HandleLock is a function that handles the file lock for Proto preventing multiple instances of the app from running at once.
-	Example:
-		lock := HandleLock()
-		defer lock.Unlock()
-	Returns:
-		flock.Flock: The file lock
+HandleLock is a function that handles the file lock for Proto preventing multiple instances of the app from running at once.
+Example:
+
+	lock := HandleLock()
+	defer lock.Unlock()
+
+Returns:
+
+	flock.Flock: The file lock
 */
 func HandleLock() *flock.Flock {
 	// Create a cache directory if it doesn't exist
@@ -47,12 +45,15 @@ func HandleLock() *flock.Flock {
 }
 
 /*
-	Prompt is a function that prompts the user for a yes or no answer with a given message.
-	Arguments:
-		message<string> The message to display to the user.
-		defaultValue<bool> The default value to return if the user hits enter
-	Returns:
-		bool: The user's answer
+Prompt is a function that prompts the user for a yes or no answer with a given message.
+Arguments:
+
+	message<string> The message to display to the user.
+	defaultValue<bool> The default value to return if the user hits enter
+
+Returns:
+
+	bool: The user's answer
 */
 func Prompt(message string, defaultValue bool) bool {
 	var response string

@@ -1,8 +1,3 @@
-/*
-Copyright © 2022 Blooym
-
-GPLv3 License, see the LICENSE file for more information.
-*/
 package core
 
 import (
@@ -16,16 +11,21 @@ import (
 )
 
 /*
-	FormatRepo takes a source index and returns the owner and repo.
-	Arguments:
-		entryIndex<int>: The index of the source to get the owner and repo from.
-	Example:
-		owner, repo := FormatRepo(0)
-		fmt.Println(owner) // Blooym
-		fmt.Println(repo) // proto
-	Returns:
-		string: The owner of the repo.
-		string: The name of the repo.
+FormatRepo takes a source index and returns the owner and repo.
+Arguments:
+
+	entryIndex<int>: The index of the source to get the owner and repo from.
+
+Example:
+
+	owner, repo := FormatRepo(0)
+	fmt.Println(owner) // Blooym
+	fmt.Println(repo) // proto
+
+Returns:
+
+	string: The owner of the repo.
+	string: The name of the repo.
 */
 func FormatRepo(entryIndex int) (string, string) {
 
@@ -42,12 +42,15 @@ func FormatRepo(entryIndex int) (string, string) {
 }
 
 /*
-	PromptSourceIndex asks the user which source they want to use if they do not manually specify one.
-	Example:
-		index := PromptSourceIndex()
-		fmt.Println(index) // 0
-	Returns:
-		int: The index of the source the user selected.
+PromptSourceIndex asks the user which source they want to use if they do not manually specify one.
+Example:
+
+	index := PromptSourceIndex()
+	fmt.Println(index) // 0
+
+Returns:
+
+	int: The index of the source the user selected.
 */
 func PromptSourceIndex() int {
 	var source int
@@ -87,14 +90,19 @@ func PromptSourceIndex() int {
 }
 
 /*
-	GetReleases returns all of the releases for the specified source index.
-	Arguments:
-		entryIndex<int>: The index of the source to get the owner and repo from.
-	Example:
-		releases, err := GetReleases(0)
-	Returns:
-		[]*github.RepositoryRelease: A list of all of the releases for the specified source index.
-		error: Any errors that occur.
+GetReleases returns all of the releases for the specified source index.
+Arguments:
+
+	entryIndex<int>: The index of the source to get the owner and repo from.
+
+Example:
+
+	releases, err := GetReleases(0)
+
+Returns:
+
+	[]*github.RepositoryRelease: A list of all of the releases for the specified source index.
+	error: Any errors that occur.
 */
 func GetReleases(entryIndex int) ([]*github.RepositoryRelease, error) {
 	owner, repo := FormatRepo(entryIndex)
@@ -112,15 +120,20 @@ func GetReleases(entryIndex int) ([]*github.RepositoryRelease, error) {
 }
 
 /*
-	GetReleaseData returns the release data for the specified source index and tag.
-	Arguments:
-		entryIndex<int>: The index of the source to get the owner and repo from.
-		tag<string>: The tag of the release to get the data for.
-	Example:
-		release, err := GetReleaseData(0, "v1.0.0")
-	Returns:
-		*github.RepositoryRelease: The release data for the specified source index and tag.
-		error: Any errors that occur.
+GetReleaseData returns the release data for the specified source index and tag.
+Arguments:
+
+	entryIndex<int>: The index of the source to get the owner and repo from.
+	tag<string>: The tag of the release to get the data for.
+
+Example:
+
+	release, err := GetReleaseData(0, "v1.0.0")
+
+Returns:
+
+	*github.RepositoryRelease: The release data for the specified source index and tag.
+	error: Any errors that occur.
 */
 func GetReleaseData(entryIndex int, tag string) (*github.RepositoryRelease, error) {
 	owner, repo := FormatRepo(entryIndex)
@@ -137,14 +150,19 @@ func GetReleaseData(entryIndex int, tag string) (*github.RepositoryRelease, erro
 }
 
 /*
-	GetTotalAssetSize returns the total size of all of the assets in the specified release.
-	Arguments:
-		assets<[]*github.ReleaseAsset>: The assets to get the total size of.
-	Example:
-		size := GetTotalAssetSize(release.Assets)
-		fmt.Println(size) // 123456789
-	Returns:
-		int64: The total size of all of the assets in the specified release.
+GetTotalAssetSize returns the total size of all of the assets in the specified release.
+Arguments:
+
+	assets<[]*github.ReleaseAsset>: The assets to get the total size of.
+
+Example:
+
+	size := GetTotalAssetSize(release.Assets)
+	fmt.Println(size) // 123456789
+
+Returns:
+
+	int64: The total size of all of the assets in the specified release.
 */
 func GetTotalAssetSize(assets []*github.ReleaseAsset) int64 {
 	var size int
@@ -168,14 +186,19 @@ func GetTotalAssetSize(assets []*github.ReleaseAsset) int64 {
 }
 
 /*
-	GetValidAssets returns a tar file and a sha512sum file from the specified release.
-	Arguments:
-		release<*github.RepositoryRelease>: The release to get the assets from.
-	Example:
-		assets := GetValidAssets(release.Assets)
-		fmt.Println(assets) // [tar.xz, sha512sum]
-	Returns:
-		[]*github.ReleaseAsset: A list of the tar file and the sha512sum file.
+GetValidAssets returns a tar file and a sha512sum file from the specified release.
+Arguments:
+
+	release<*github.RepositoryRelease>: The release to get the assets from.
+
+Example:
+
+	assets := GetValidAssets(release.Assets)
+	fmt.Println(assets) // [tar.xz, sha512sum]
+
+Returns:
+
+	[]*github.ReleaseAsset: A list of the tar file and the sha512sum file.
 */
 func GetValidAssets(release *github.RepositoryRelease) (*github.ReleaseAsset, *github.ReleaseAsset, error) {
 	var runnerTar *github.ReleaseAsset

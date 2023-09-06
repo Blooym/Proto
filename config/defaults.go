@@ -1,8 +1,3 @@
-/*
-Copyright © 2022 Blooym
-
-GPLv3 License, see the LICENSE file for more information.
-*/
 package config
 
 import (
@@ -13,7 +8,7 @@ import (
 )
 
 /*
-	SetDefaults sets the default values for the configuration file.
+SetDefaults sets the default values for the configuration file.
 */
 func SetDefaults() {
 	configDir, _ := os.UserConfigDir()
@@ -34,8 +29,8 @@ func SetDefaults() {
 		"GloriousEggroll/wine-ge-custom",
 	})
 	viper.SetDefault("app.customlocations", map[string]string{
-		"steam":  "~/.steam/root/compatibilitytools.d/",
-		"lutris": "~/.local/share/lutris/runners/wine/",
+		"steam":         "~/.steam/root/compatibilitytools.d/",
+		"lutris":        "~/.local/share/lutris/runners/wine/",
 		"lutrisflatpak": "~/.var/app/net.lutris.Lutris/data/lutris/runners/wine",
 	})
 

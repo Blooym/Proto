@@ -1,11 +1,7 @@
-/*
-Copyright © 2022 Blooym
-
-GPLv3 License, see the LICENSE file for more information.
-*/
 package core
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"runtime"
@@ -14,16 +10,19 @@ import (
 )
 
 /*
-	AppUpdate is a function that checks for updates and updates the application if an update is available.
-	Typically used for non package-manager installations
-	Arguments:
-		version<string> The current version of the application
-	Example:
-		AppUpdate("v1.2.3")
+AppUpdate is a function that checks for updates and updates the application if an update is available.
+Typically used for non package-manager installations
+Arguments:
+
+	version<string> The current version of the application
+
+Example:
+
+	AppUpdate("v1.2.3")
 */
 func AppUpdate(version string) {
 	updater, _ := selfupdate.NewUpdater(selfupdate.Config{Validator: &selfupdate.ChecksumValidator{UniqueFilename: "checksums.txt"}})
-	latest, found, err := updater.DetectLatest("Blooym/proto")
+	latest, found, err := updater.DetectLatest(context.Background(), selfupdate.NewRepositorySlug("Blooym", "proto"))
 
 	// Unknown error occurred, abort update process.
 	CheckError(err)
@@ -50,7 +49,7 @@ func AppUpdate(version string) {
 	}
 
 	// Perform the update.
-	if err := selfupdate.UpdateTo(latest.AssetURL, latest.AssetName, exe); err != nil {
+	if err := selfupdate.UpdateTo(context.Background(), latest.AssetURL, latest.AssetName, exe); err != nil {
 		fmt.Printf("error occurred while updating: %v", err)
 		return
 	}

@@ -21,14 +21,19 @@ import (
 )
 
 /*
-	GetCustomLocation returns the custom location of the passed arg is any of the pre-saved locations, otherwise it just returns the arg.
-	Arguments:
-		arg<string>: The argument to check.
-	Example:
-		dir := GetCustomLocation("steam")
-		fmt.Println(dir) // $HOME/.steam/root/compatabilitytools.d/
-	Returns:
-		string: A path.
+GetCustomLocation returns the custom location of the passed arg is any of the pre-saved locations, otherwise it just returns the arg.
+Arguments:
+
+	arg<string>: The argument to check.
+
+Example:
+
+	dir := GetCustomLocation("steam")
+	fmt.Println(dir) // $HOME/.steam/root/compatabilitytools.d/
+
+Returns:
+
+	string: A path.
 */
 func GetCustomLocation(arg string) string {
 	customLocations := viper.GetStringMapString("app.customlocations")
@@ -41,15 +46,20 @@ func GetCustomLocation(arg string) string {
 }
 
 /*
-	UsePath returns the path with sane changes to it.
-	Arguments:
-		path<string>: The path to adjust.
-		trailSlash<bool>: Whether or not to have a trailing slash.
-	Example:
-		dir := UsePath("$HOME/Dowloads/, false)
-		fmt.Println(dir) // $HOME/Downloads
-	Returns:
-		string: A path.
+UsePath returns the path with sane changes to it.
+Arguments:
+
+	path<string>: The path to adjust.
+	trailSlash<bool>: Whether or not to have a trailing slash.
+
+Example:
+
+	dir := UsePath("$HOME/Dowloads/, false)
+	fmt.Println(dir) // $HOME/Downloads
+
+Returns:
+
+	string: A path.
 */
 func UsePath(path string, trailSlash bool) string {
 
@@ -77,9 +87,10 @@ func UsePath(path string, trailSlash bool) string {
 }
 
 /*
-	DeleteUserTemp clears the user's temp directory
-	Returns:
-		error: An error if one occurs.
+DeleteUserTemp clears the user's temp directory
+Returns:
+
+	error: An error if one occurs.
 */
 func DeleteUserTemp() error {
 	tempDir := os.TempDir() + "/proto/" + fmt.Sprint(os.Getuid())
@@ -92,13 +103,16 @@ func DeleteUserTemp() error {
 }
 
 /*
-	GetUserTemp creates a temporary directory in the proto temp directory
-	Example:
-		dir, err := GetUserTemp()
-		fmt.Println(dir) // /tmp/proto/1000/
-	Returns:
-		string: The path to the temp directory.
-		error: An error if one occurs.
+GetUserTemp creates a temporary directory in the proto temp directory
+Example:
+
+	dir, err := GetUserTemp()
+	fmt.Println(dir) // /tmp/proto/1000/
+
+Returns:
+
+	string: The path to the temp directory.
+	error: An error if one occurs.
 */
 func GetUserTemp() (string, error) {
 	userTempDir := viper.GetString("storage.tmp") + "proto/"
@@ -118,15 +132,20 @@ func GetUserTemp() (string, error) {
 }
 
 /*
-	DownloadFile downloads the file from the given URL, following redirects if needed. The final file will be put at the given path
-	Arguments:
-		path<string>: The path to download the file to.
-		url<string>: The URL to download the file from.
-	Example:
-		file, err := DownloadFile("$HOME/Downloads/file.tar.gz", "https://example.com/file.tar.gz")
-	Returns:
-		os.FileInfo: The file that was downloaded.
-		error: An error if one occurs.
+DownloadFile downloads the file from the given URL, following redirects if needed. The final file will be put at the given path
+Arguments:
+
+	path<string>: The path to download the file to.
+	url<string>: The URL to download the file from.
+
+Example:
+
+	file, err := DownloadFile("$HOME/Downloads/file.tar.gz", "https://example.com/file.tar.gz")
+
+Returns:
+
+	os.FileInfo: The file that was downloaded.
+	error: An error if one occurs.
 */
 func DownloadFile(path, url string) (os.FileInfo, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -180,14 +199,19 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 }
 
 /*
-	ExtractTar extracts the given tar file to the given path using gnu-tar.
-	Arguments:
-		tarPath<string>: The path to the tar file.
-		extractPath<string>: The path to extract the tar file to.
-	Example:
-		err := ExtractTar("$HOME/Downloads/file.tar.gz", "$HOME/Downloads/")
-	Returns:
-		error: An error if one occurs.
+ExtractTar extracts the given tar file to the given path using gnu-tar.
+Arguments:
+
+	tarPath<string>: The path to the tar file.
+	extractPath<string>: The path to extract the tar file to.
+
+Example:
+
+	err := ExtractTar("$HOME/Downloads/file.tar.gz", "$HOME/Downloads/")
+
+Returns:
+
+	error: An error if one occurs.
 */
 func ExtractTar(tarPath, extractPath string) error {
 
@@ -218,16 +242,21 @@ func ExtractTar(tarPath, extractPath string) error {
 }
 
 /*
-	Tries to match a given file's sha512sum against the given sum file
-	Arguments:
-		filePath<string>: The path to the file to check.
-		sumPath<string>: The path to the sum file.
-	Example:
-		match, err := CheckSum("$HOME/Downloads/file.tar.gz", "$HOME/Downloads/file.tar.gz.sha512sum")
-		fmt.Println(match) // true
-	Returns:
-		bool: Whether or not the file matches the sum.
-		error: An error if one occurs.
+Tries to match a given file's sha512sum against the given sum file
+Arguments:
+
+	filePath<string>: The path to the file to check.
+	sumPath<string>: The path to the sum file.
+
+Example:
+
+	match, err := CheckSum("$HOME/Downloads/file.tar.gz", "$HOME/Downloads/file.tar.gz.sha512sum")
+	fmt.Println(match) // true
+
+Returns:
+
+	bool: Whether or not the file matches the sum.
+	error: An error if one occurs.
 */
 func MatchChecksum(filePath, sumPath string) (bool, error) {
 	// Get the sum of the file with crypto inbuilt
@@ -261,15 +290,20 @@ func MatchChecksum(filePath, sumPath string) (bool, error) {
 }
 
 /*
-	GetDirSize gets the size of the given directory in bytes.
-	Arguments:
-		path<string>: The path to the directory.
-	Example:
-		size, err := GetDirSize("$HOME/Downloads/")
-		fmt.Println(size) // 4194304
-	Returns:
-		int64: The size of the directory in bytes.
-		error: An error if one occurs.
+GetDirSize gets the size of the given directory in bytes.
+Arguments:
+
+	path<string>: The path to the directory.
+
+Example:
+
+	size, err := GetDirSize("$HOME/Downloads/")
+	fmt.Println(size) // 4194304
+
+Returns:
+
+	int64: The size of the directory in bytes.
+	error: An error if one occurs.
 */
 func GetDirSize(path string) (int64, error) {
 	var size int64
@@ -286,16 +320,21 @@ func GetDirSize(path string) (int64, error) {
 }
 
 /*
-	HumanReadableBytes converts the given bytes to a human readable amount of bytes and a unit.
-	Arguments:
-		bytes<int64>: The bytes to convert.
-	Example:
-		humanReadableBytes, unit := HumanReadableBytes(4194304)
-		fmt.Println(humanReadableBytes) // 4
-		fmt.Println(unit) // MB
-	Returns:
-		int64: The human readable amount of bytes.
-		string: The unit of the bytes.
+HumanReadableBytes converts the given bytes to a human readable amount of bytes and a unit.
+Arguments:
+
+	bytes<int64>: The bytes to convert.
+
+Example:
+
+	humanReadableBytes, unit := HumanReadableBytes(4194304)
+	fmt.Println(humanReadableBytes) // 4
+	fmt.Println(unit) // MB
+
+Returns:
+
+	int64: The human readable amount of bytes.
+	string: The unit of the bytes.
 */
 func HumanReadableBytes(bytes int64) (int64, string) {
 	switch {
