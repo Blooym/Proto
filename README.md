@@ -49,86 +49,13 @@ proto config
 
 ## Installation
 
-### Dependancies
+> [!IMPORTANT]  
+> The previously available repository at `packages.bitsofabyte.dev` is deprecated and will not be used for futher updates. Please remove it from your system's repositories, thanks!
+
+### Dependencies
 Proto currently requires the following packages in order to function: [tar](https://www.gnu.org/software/tar/)
 
-If you are using a package manager to install, these should be automatically installed alongside Proto if they are missing from your system, however if you are building from source or installing from an archive, make sure these are also present. 
-
 ### Methods
-
-#### APT Package Manager
-
-If you are using an Ubuntu-derivative system then use this installation method.
-
-<details>
-<summary>Show Steps</summary>
-
-<br>
-  
-1. Add the repository hosting Proto to your apt sources directory (Only run this once)
-```
-echo "deb [trusted=yes] https://packages.blooym.dev/apt/ /" | sudo tee -a /etc/apt/sources.list.d/blooym.list && sudo apt update
-``` 
-
-2. Install Proto to your system
-```
-sudo apt install proto
-```
-
-</details>  
-
----
-
-#### DNF Package Manager
-
-If you are using Fedora, OpenSUSE, or any other system that supports the DNF package manager then use this installation method.
-
-<details>
-<summary>Show Steps</summary>
-<br>
-  
-1. Add the repository hosting Proto to your DNF repo directory (Only run this once)
-```
-echo "[Blooym]            
-name=Blooym Packages         
-baseurl=https://packages.blooym.dev/yum/
-enabled=1
-gpgcheck=0" | sudo tee -a /etc/yum.repos.d/blooym.repo && sudo dnf update
-``` 
-
-2. Install Proto to your system
-```
-sudo dnf install proto
-```
-
-</details>  
-
----
-
-#### Homebrew Package Manager
-
-If your distributions package manager is not listed here or you wish to use [Homebrew](https://brew.sh).
-
-<details>
-<summary>Show Steps</summary>
-<br>
-  
-1. Install homebrew if you haven't already got it
-```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-2. Add the tap for Proto to homebrew
-```
-brew tap Blooym/proto https://github.com/Blooym/proto.git
-```
-
-3. Install proto to your system
-```
-brew install proto
-```
-  
-</details>
 
 ---
 
@@ -139,7 +66,7 @@ Manually download a release file from the GitHub releases.
 <summary>Show Steps</summary>
   
 1. Download the [newest release](https://github.com/Blooym/proto/releases/latest) for your system/architecture
-2. Extract the tar archive or install a `.rpm`/`.deb` package (these will also provide the repository to handle automatic updates)
+2. Extract the tar archive and place it somewhere inside of your `$PATH`
 
 If you aren't sure on what architecture you need to download, you should try `amd64` first as it is the most common.
 
