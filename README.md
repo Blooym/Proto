@@ -53,11 +53,10 @@ proto config
 > The previously available repository at `packages.bitsofabyte.dev` is deprecated and will not be used for futher updates. Please remove it from your system's repositories, thanks!
 
 ### Dependencies
+
 Proto currently requires the following packages in order to function: [tar](https://www.gnu.org/software/tar/)
 
 ### Methods
-
----
 
 #### Manual Installation
 
