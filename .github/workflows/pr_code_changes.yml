@@ -23,7 +23,7 @@ jobs:
 
   Preview:
     runs-on: ubuntu-latest
-    needs: ["Dependency-Review", "No-Invalid-Edits"]
+    needs: ["Dependency-Review"]
     timeout-minutes: 60
     steps:
       - name: Checkout Repository
